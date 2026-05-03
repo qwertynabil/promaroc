@@ -1,11 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    company: '',
+    properties: '',
     message: ''
   });
   const [message, setMessage] = useState('');
@@ -21,8 +28,8 @@ export default function ContactForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.message) {
-      setMessage('Please fill in all fields.');
+    if (!formData.name || !formData.email || !formData.company || !formData.message) {
+      setMessage('Please fill in all required fields.');
       setMessageType('error');
       return;
     }
@@ -34,67 +41,140 @@ export default function ContactForm() {
       return;
     }
 
-    // Simulate form submission
-    setMessage('Thank you for your message! We will get back to you soon.');
+    setMessage('Thank you! Our team will contact you within 24 hours to discuss your property management needs.');
     setMessageType('success');
-    setFormData({ name: '', email: '', message: '' });
+    setFormData({ name: '', email: '', company: '', properties: '', message: '' });
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-900">Get in Touch</h2>
-      <p className="text-gray-600 mb-8 text-center">
-        Have questions or need assistance? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-      </p>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            rows={5}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105 shadow-lg"
-        >
-          Send Message
-        </button>
-      </form>
-      {message && (
-        <div className={`mt-6 p-4 rounded-lg ${messageType === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-          {message}
-        </div>
-      )}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Contact Form */}
+      <div className="lg:col-span-2">
+        <Card className="p-8 border-slate-200 bg-white shadow-lg">
+          <h2 className="text-3xl font-bold mb-2 text-slate-900">Get Started Today</h2>
+          <p className="text-slate-600 mb-8">Schedule a demo or ask us any questions about our property management platform.</p>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="John Doe"
+                  required
+                  className="border-slate-300 focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">Email Address *</label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="john@example.com"
+                  required
+                  className="border-slate-300 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="company" className="block text-sm font-medium text-slate-700 mb-2">Company/Name *</label>
+                <Input
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  placeholder="Your Company Name"
+                  required
+                  className="border-slate-300 focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="properties" className="block text-sm font-medium text-slate-700 mb-2">Number of Properties</label>
+                <Input
+                  id="properties"
+                  name="properties"
+                  value={formData.properties}
+                  onChange={handleChange}
+                  placeholder="e.g., 5-10"
+                  className="border-slate-300 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">Message *</label>
+              <Textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tell us about your property management needs..."
+                required
+                rows={5}
+                className="border-slate-300 focus:border-blue-500 resize-none"
+              />
+            </div>
+
+            <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+              Request Demo
+            </Button>
+          </form>
+
+          {message && (
+            <div className={`mt-6 p-4 rounded-lg ${messageType === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
+              {message}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* Contact Information */}
+      <div className="space-y-6">
+        <Card className="p-6 border-slate-200 bg-gradient-to-br from-blue-50 to-purple-50">
+          <h3 className="text-xl font-bold text-slate-900 mb-6">Contact Information</h3>
+          
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+              <div>
+                <p className="font-semibold text-slate-900">Email</p>
+                <p className="text-slate-600">hello@promaroc.com</p>
+              </div>
+            </div>
+            
+            <div className="flex gap-4">
+              <Phone className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+              <div>
+                <p className="font-semibold text-slate-900">Phone</p>
+                <p className="text-slate-600">1-800-PM-TODAY</p>
+              </div>
+            </div>
+            
+            <div className="flex gap-4">
+              <MapPin className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+              <div>
+                <p className="font-semibold text-slate-900">Office</p>
+                <p className="text-slate-600">San Francisco, CA</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 border-slate-200 bg-white">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">Response Time</h3>
+          <p className="text-slate-600 text-sm">We typically respond to demo requests within 24 hours during business days.</p>
+        </Card>
+      </div>
     </div>
   );
 }
+'use client';
+

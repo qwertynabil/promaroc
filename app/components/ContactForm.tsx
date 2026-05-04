@@ -176,5 +176,3 @@ export default function ContactForm() {
     </div>
   );
 }
-'use client';
-

@@ -1,142 +1,164 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { useState, useEffect, useRef, MouseEvent } from 'react';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Spotlight tracking state
+  const headerRef = useRef<HTMLElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' }
+    { label: 'Platform', href: '/' },
+    { label: 'Analytics', href: '/about' },
+    { label: 'Connect', href: '/contact' }
   ];
 
+  // Track scroll for morphing effect
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Track mouse for the spotlight effect
+  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
+    if (!headerRef.current) return;
+    const rect = headerRef.current.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
   return (
-    <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ease-out ${
-        isScrolled
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/20 dark:border-gray-700/20 shadow-sm'
-          : 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-md'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center space-x-2 group relative z-10"
-          >
-            <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent group-hover:from-green-500 group-hover:to-blue-500 transition-all duration-300 ease-out transform group-hover:scale-105">
-              Promaroc
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="relative px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-300 ease-out group"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <span className="relative z-10">{item.label}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-                <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full group-hover:left-0 transition-all duration-300 ease-out"></div>
-              </Link>
-            ))}
-          </nav>
-
-          {/* CTA Button + Theme Toggle + Mobile Menu */}
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:block">
-              <ThemeToggle />
-            </div>
-
-            <Link
-              href="/contact"
-              className="hidden md:inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-semibold rounded-full hover:from-green-500 hover:to-blue-500 transition-all duration-300 ease-out transform hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 group"
-            >
-              <span className="relative z-10">Get Started</span>
-              <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-            </Link>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 ease-out group"
-              aria-label="Toggle menu"
-            >
-              <div className="relative w-5 h-5">
-                <span
-                  className={`absolute block h-0.5 w-5 bg-gray-700 dark:bg-gray-300 transform transition-all duration-300 ease-out ${
-                    isMenuOpen ? 'rotate-45 top-2' : 'top-1'
-                  }`}
-                ></span>
-                <span
-                  className={`absolute block h-0.5 w-5 bg-gray-700 dark:bg-gray-300 top-2 transition-all duration-300 ease-out ${
-                    isMenuOpen ? 'opacity-0' : 'opacity-100'
-                  }`}
-                ></span>
-                <span
-                  className={`absolute block h-0.5 w-5 bg-gray-700 dark:bg-gray-300 transform transition-all duration-300 ease-out ${
-                    isMenuOpen ? '-rotate-45 top-2' : 'top-3'
-                  }`}
-                ></span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${
-            isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+    <>
+      {/* 
+        THE SPOTLIGHT HEADER 
+        Tracks the mouse cursor to draw a soft glow behind the glass
+      */}
+      <header
+        ref={headerRef}
+        onMouseMove={handleMouseMove}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out overflow-hidden ${
+          isScrolled 
+            ? 'py-3' 
+            : 'py-6'
+        }`}
+      >
+        {/* The Glass Panel that morphs in on scroll */}
+        <div 
+          className={`absolute inset-x-4 md:inset-x-8 top-0 bottom-0 mx-auto max-w-7xl rounded-2xl transition-all duration-500 ease-out ${
+            isScrolled 
+              ? 'bg-zinc-950/40 backdrop-blur-xl border border-white/10 shadow-2xl' 
+              : 'bg-transparent border-transparent'
           }`}
         >
-          <nav className="py-4 space-y-1">
-            {navItems.map((item, index) => (
+          {/* Interactive Mouse Spotlight */}
+          <div 
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+            style={{
+              background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 255, 255, 0.08), transparent 40%)`
+            }}
+          />
+        </div>
+
+        {/* Header Content */}
+        <div className="relative max-w-7xl mx-auto px-8 md:px-12 flex justify-between items-center h-12">
+          
+          {/* Logo */}
+          <Link href="/" className="relative z-10 group">
+            <span className="text-2xl font-bold tracking-tighter text-white">
+              Pro<span className="text-zinc-500 transition-colors duration-300 group-hover:text-amber-400">maroc</span>
+            </span>
+          </Link>
+
+          {/* Desktop Nav - Hover Pill Effect */}
+          <nav className="hidden md:flex items-center space-x-2 bg-white/5 rounded-full px-2 py-1 backdrop-blur-md border border-white/5">
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={`block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-300 ease-out transform hover:translate-x-1 ${
-                  isMenuOpen ? 'animate-in slide-in-from-left-5 fade-in duration-300' : ''
-                }`}
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                  animationFillMode: 'both'
-                }}
+                className="relative px-6 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors duration-300 rounded-full hover:bg-white/10"
               >
                 {item.label}
               </Link>
             ))}
-
-            <div className="flex items-center justify-between px-4 py-3">
-              <ThemeToggle />
-              <Link
-                href="/contact"
-                onClick={() => setIsMenuOpen(false)}
-                className="px-6 py-2.5 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-semibold rounded-full hover:from-green-500 hover:to-blue-500 transition-all duration-300 ease-out transform hover:scale-105"
-              >
-                Get Started
-              </Link>
-            </div>
           </nav>
+
+          {/* Desktop CTA & Mobile Toggle */}
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/contact"
+              className="hidden md:inline-flex relative items-center justify-center px-6 py-2 rounded-full bg-white text-black font-semibold text-sm hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+            >
+              Get Started
+            </Link>
+
+            {/* Hamburger Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden relative w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/10 text-white z-[60] focus:outline-none"
+            >
+              <div className="relative w-5 h-4 flex flex-col justify-between">
+                <span className={`h-0.5 bg-current rounded-full transform transition-all duration-300 origin-right ${isMenuOpen ? '-rotate-45 -translate-x-1' : ''}`} />
+                <span className={`h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
+                <span className={`h-0.5 bg-current rounded-full transform transition-all duration-300 origin-right ${isMenuOpen ? 'rotate-45 -translate-x-1' : ''}`} />
+              </div>
+            </button>
+          </div>
         </div>
+      </header>
+
+      {/* 
+        RADIAL WIPE MOBILE MENU 
+        Uses clip-path to expand from the top right corner perfectly
+      */}
+      <div
+        className="fixed inset-0 z-50 bg-zinc-950 flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.86,0,0.07,1)]"
+        style={{
+          clipPath: isMenuOpen ? 'circle(150% at 90% 10%)' : 'circle(0% at 90% 10%)',
+          pointerEvents: isMenuOpen ? 'auto' : 'none'
+        }}
+      >
+        {/* Decorative Background Element */}
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.05),transparent_50%)]" />
+
+        <nav className="relative z-10 flex flex-col items-center space-y-8 w-full px-6">
+          {navItems.map((item, index) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsMenuOpen(false)}
+              className={`text-5xl font-semibold tracking-tighter text-white hover:text-amber-400 transition-all duration-500 transform ${
+                isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+              }`}
+              style={{ transitionDelay: `${index * 100 + 300}ms` }}
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          <div
+            className={`pt-12 transform transition-all duration-700 delay-700 ${
+              isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+            }`}
+          >
+            <Link
+              href="/contact"
+              onClick={() => setIsMenuOpen(false)}
+              className="px-10 py-4 bg-white text-black text-lg font-semibold rounded-full hover:bg-zinc-200 transition-all duration-300 inline-block"
+            >
+              Get Started
+            </Link>
+          </div>
+        </nav>
       </div>
-    </header>
+    </>
   );
 }

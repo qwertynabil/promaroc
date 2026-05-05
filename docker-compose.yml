@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # 1. The PostgreSQL Database Container
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: promaroc_admin
+      POSTGRES_PASSWORD: 123584679Helloworld_ # Change this!
+      POSTGRES_DB: promaroc_db
+    ports:
+      - "5432:5432" # Exposes DB so you can connect via DBeaver/TablePlus
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Saves data so it isn't lost on restart
+
+  # 2. The Node.js Backend Container
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      - "5000:5000" # Your API will be at http://YOUR_IP:5000
+    environment:
+      - PORT=5000
+      # Notice how it connects to 'db' instead of localhost!
+      - DATABASE_URL=postgresql://promaroc_admin:123584679Helloworld_@db:5432/promaroc_db?schema=public
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app # Syncs your code so you don't have to rebuild on every change
+      - /app/node_modules
+
+volumes:
+  pgdata: # This is the virtual hard drive for your database

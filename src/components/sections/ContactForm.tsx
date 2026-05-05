@@ -1,59 +1,22 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card } from '@/components/ui/card';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Card } from '@/components/ui/card'
+import { Mail, Phone, MapPin } from 'lucide-react'
+import { useContactForm } from '@/hooks/useContactForm'
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    properties: '',
-    message: ''
-  });
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.name || !formData.email || !formData.company || !formData.message) {
-      setMessage('Please fill in all required fields.');
-      setMessageType('error');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setMessage('Please enter a valid email address.');
-      setMessageType('error');
-      return;
-    }
-
-    setMessage('Thank you! Our team will contact you within 24 hours to discuss your property management needs.');
-    setMessageType('success');
-    setFormData({ name: '', email: '', company: '', properties: '', message: '' });
-  };
+  const { formData, handleChange, handleSubmit, message, messageType } = useContactForm()
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Contact Form */}
       <div className="lg:col-span-2">
         <Card className="p-8 border-slate-200 bg-white shadow-lg">
           <h2 className="text-3xl font-bold mb-2 text-slate-900">Get Started Today</h2>
           <p className="text-slate-600 mb-8">Schedule a demo or ask us any questions about our property management platform.</p>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -129,18 +92,21 @@ export default function ContactForm() {
           </form>
 
           {message && (
-            <div className={`mt-6 p-4 rounded-lg ${messageType === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
+            <div className={`mt-6 p-4 rounded-lg ${
+              messageType === 'success'
+                ? 'bg-green-50 border border-green-200 text-green-800'
+                : 'bg-red-50 border border-red-200 text-red-800'
+            }`}>
               {message}
             </div>
           )}
         </Card>
       </div>
 
-      {/* Contact Information */}
       <div className="space-y-6">
         <Card className="p-6 border-slate-200 bg-gradient-to-br from-blue-50 to-purple-50">
           <h3 className="text-xl font-bold text-slate-900 mb-6">Contact Information</h3>
-          
+
           <div className="space-y-6">
             <div className="flex gap-4">
               <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
@@ -149,7 +115,7 @@ export default function ContactForm() {
                 <p className="text-slate-600">hello@promaroc.com</p>
               </div>
             </div>
-            
+
             <div className="flex gap-4">
               <Phone className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
@@ -157,7 +123,7 @@ export default function ContactForm() {
                 <p className="text-slate-600">1-800-PM-TODAY</p>
               </div>
             </div>
-            
+
             <div className="flex gap-4">
               <MapPin className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
@@ -174,5 +140,5 @@ export default function ContactForm() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

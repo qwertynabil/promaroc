@@ -1,37 +1,36 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { Card } from '@/components/ui/card';
-import { Target, Users, Zap, CheckCircle } from 'lucide-react';
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import { Card } from '@/components/ui/card'
+import { Target, Users, Zap, CheckCircle } from 'lucide-react'
 
 export default function About() {
   const values = [
     {
       icon: Target,
       title: 'Mission-Driven',
-      description: 'Empower property managers with intelligent tools to simplify operations and maximize profitability.'
+      description: 'Empower property managers with intelligent tools to simplify operations and maximize profitability.',
     },
     {
       icon: Users,
       title: 'Customer-Focused',
-      description: 'Every feature is built based on real feedback from property managers like you.'
+      description: 'Every feature is built based on real feedback from property managers like you.',
     },
     {
       icon: Zap,
       title: 'Innovation',
-      description: 'Continuously evolving with cutting-edge technology and best practices in property management.'
+      description: 'Continuously evolving with cutting-edge technology and best practices in property management.',
     },
     {
       icon: CheckCircle,
       title: 'Reliability',
-      description: 'Enterprise-grade infrastructure ensuring 99.9% uptime and data security.'
-    }
-  ];
+      description: 'Enterprise-grade infrastructure ensuring 99.9% uptime and data security.',
+    },
+  ]
 
   return (
     <div>
       <Header />
       <main className="pt-16 min-h-screen">
-        {/* Hero Section */}
         <section className="py-20 bg-gradient-to-b from-blue-50 to-white">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -41,7 +40,6 @@ export default function About() {
           </div>
         </section>
 
-        {/* Mission Section */}
         <section className="py-20 bg-white">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -69,26 +67,24 @@ export default function About() {
           </div>
         </section>
 
-        {/* Values Section */}
         <section className="py-20 bg-slate-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-bold text-center text-slate-900 mb-16">Our Values</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {values.map((value, index) => {
-                const Icon = value.icon;
+                const Icon = value.icon
                 return (
                   <Card key={index} className="p-8 border-slate-200 bg-white hover:shadow-lg transition-shadow">
                     <Icon className="w-12 h-12 text-blue-600 mb-4" />
                     <h3 className="text-xl font-bold text-slate-900 mb-3">{value.title}</h3>
                     <p className="text-slate-600 leading-relaxed">{value.description}</p>
                   </Card>
-                );
+                )
               })}
             </div>
           </div>
         </section>
 
-        {/* Stats Section */}
         <section className="py-20 bg-white">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -112,7 +108,6 @@ export default function About() {
           </div>
         </section>
 
-        {/* Team Section */}
         <section className="py-20 bg-slate-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold text-slate-900 mb-6">Our Team</h2>
@@ -133,5 +128,5 @@ export default function About() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }

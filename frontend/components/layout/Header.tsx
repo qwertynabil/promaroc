@@ -1,135 +1,149 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useHeaderLogic } from '@/hooks/useHeaderLogic'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { 
+  ChevronDown, 
+  MonitorSmartphone, 
+  Home, 
+  TrendingUp, 
+  Menu, 
+  X, 
+  ArrowRight
+} from 'lucide-react';
 
 export default function Header() {
-  const {
-    headerRef,
-    isMenuOpen,
-    isScrolled,
-    mousePosition,
-    navItems,
-    handleMouseMove,
-    setIsMenuOpen,
-  } = useHeaderLogic()
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Apple-style Glassmorphism on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <>
-      <header
-        ref={headerRef}
-        onMouseMove={handleMouseMove}
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out overflow-hidden ${
-          isScrolled ? 'py-3' : 'py-6'
-        }`}
-      >
-        <div
-          className={`absolute inset-x-4 md:inset-x-8 top-0 bottom-0 mx-auto max-w-7xl rounded-2xl transition-all duration-500 ease-out ${
-            isScrolled
-              ? 'bg-zinc-950/40 backdrop-blur-xl border border-white/10 shadow-2xl'
-              : 'bg-transparent border-transparent'
-          }`}
-        >
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
-            style={{
-              background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 255, 255, 0.08), transparent 40%)`,
-            }}
-          />
-        </div>
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-promaroc-white/80 backdrop-blur-md border-b border-promaroc-light py-4 shadow-sm' 
+          : 'bg-transparent py-6'
+      }`}
+    >
+      <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
+        
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2 z-50">
+          {/* We will replace this with your actual logo icon later, using text for now */}
+          <span className="font-sora font-bold text-2xl tracking-tight text-promaroc-green">
+            PROMAROC
+          </span>
+        </Link>
 
-        <div className="relative max-w-7xl mx-auto px-8 md:px-12 flex justify-between items-center h-12">
-          <Link href="/" className="relative z-10 group">
-            <span className="text-2xl font-bold tracking-tighter text-white">
-              Pro<span className="text-zinc-500 transition-colors duration-300 group-hover:text-amber-400">maroc</span>
-            </span>
-          </Link>
-
-          <nav className="hidden md:flex items-center space-x-2 bg-white/5 rounded-full px-2 py-1 backdrop-blur-md border border-white/5">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="relative px-6 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors duration-300 rounded-full hover:bg-white/10"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            <Link
-              href="/contact"
-              className="hidden md:inline-flex relative items-center justify-center px-6 py-2 rounded-full bg-white text-black font-semibold text-sm hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
-            >
-              Get Started
-            </Link>
-
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden relative w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/10 text-white z-[60] focus:outline-none"
-            >
-              <div className="relative w-5 h-4 flex flex-col justify-between">
-                <span
-                  className={`h-0.5 bg-current rounded-full transform transition-all duration-300 origin-right ${
-                    isMenuOpen ? '-rotate-45 -translate-x-1' : ''
-                  }`}
-                />
-                <span
-                  className={`h-0.5 bg-current rounded-full transition-all duration-300 ${
-                    isMenuOpen ? 'opacity-0' : 'opacity-100'
-                  }`}
-                />
-                <span
-                  className={`h-0.5 bg-current rounded-full transform transition-all duration-300 origin-right ${
-                    isMenuOpen ? 'rotate-45 -translate-x-1' : ''
-                  }`}
-                />
-              </div>
+        {/* DESKTOP NAVIGATION */}
+        <nav className="hidden lg:flex items-center gap-8">
+          
+          {/* Services Mega Menu Trigger */}
+          <div className="group relative">
+            <button className="flex items-center gap-1 font-medium text-sm text-promaroc-dark hover:text-promaroc-green transition-colors py-2">
+              Services <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
             </button>
+
+            {/* The Mega Menu Dropdown */}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] opacity-0 invisible translate-y-4 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-out">
+              <div className="bg-promaroc-white rounded-2xl shadow-xl border border-promaroc-light p-6 grid grid-cols-3 gap-6">
+                
+                {/* Column 1: Digital */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-promaroc-green font-sora font-bold pb-2 border-b border-promaroc-light">
+                    <MonitorSmartphone className="w-5 h-5" />
+                    Digital Presence
+                  </div>
+                  <ul className="space-y-2 text-sm text-promaroc-dark">
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/digital">Websites & Booking Systems</Link></li>
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/digital">OTA Management (Airbnb/Booking)</Link></li>
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/digital">Media Buying & Content</Link></li>
+                  </ul>
+                </div>
+
+                {/* Column 2: On-Site */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-promaroc-green font-sora font-bold pb-2 border-b border-promaroc-light">
+                    <Home className="w-5 h-5" />
+                    On-Site Management
+                  </div>
+                  <ul className="space-y-2 text-sm text-promaroc-dark">
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/onsite">Property Supply & Cleaning</Link></li>
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/onsite">Transport & Logistics</Link></li>
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/onsite">Staff Onboarding & Training</Link></li>
+                  </ul>
+                </div>
+
+                {/* Column 3: Optimization */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-promaroc-green font-sora font-bold pb-2 border-b border-promaroc-light">
+                    <TrendingUp className="w-5 h-5" />
+                    Revenue Optimization
+                  </div>
+                  <ul className="space-y-2 text-sm text-promaroc-dark">
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/revenue">Direct Booking Strategies</Link></li>
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/revenue">Dynamic Pricing & Promos</Link></li>
+                    <li className="hover:text-promaroc-green transition-colors cursor-pointer"><Link href="/services/revenue">Identity Separation</Link></li>
+                  </ul>
+                </div>
+                
+              </div>
+            </div>
           </div>
-        </div>
-      </header>
 
-      <div
-        className="fixed inset-0 z-50 bg-zinc-950 flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.86,0,0.07,1)]"
-        style={{
-          clipPath: isMenuOpen ? 'circle(150% at 90% 10%)' : 'circle(0% at 90% 10%)',
-          pointerEvents: isMenuOpen ? 'auto' : 'none',
-        }}
-      >
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.05),transparent_50%)]" />
-
-        <nav className="relative z-10 flex flex-col items-center space-y-8 w-full px-6">
-          {navItems.map((item, index) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setIsMenuOpen(false)}
-              className={`text-5xl font-semibold tracking-tighter text-white hover:text-amber-400 transition-all duration-500 transform ${
-                isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-              }`}
-              style={{ transitionDelay: `${index * 100 + 300}ms` }}
-            >
-              {item.label}
-            </Link>
-          ))}
-
-          <div
-            className={`pt-12 transform transition-all duration-700 delay-700 ${
-              isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            <Link
-              href="/contact"
-              onClick={() => setIsMenuOpen(false)}
-              className="px-10 py-4 bg-white text-black text-lg font-semibold rounded-full hover:bg-zinc-200 transition-all duration-300 inline-block"
-            >
-              Get Started
-            </Link>
-          </div>
+          <Link href="/projects" className="font-medium text-sm text-promaroc-dark hover:text-promaroc-green transition-colors">
+            Projects
+          </Link>
+          <Link href="/about" className="font-medium text-sm text-promaroc-dark hover:text-promaroc-green transition-colors">
+            About Us
+          </Link>
         </nav>
+
+        {/* CALL TO ACTION BUTTON */}
+        <div className="hidden lg:flex items-center gap-4">
+          <Link 
+            href="/contact" 
+            className="group flex items-center gap-2 bg-promaroc-black text-promaroc-white px-6 py-2.5 rounded-full font-medium text-sm hover:bg-promaroc-green transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            Optimize My Property
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
+        {/* MOBILE MENU TOGGLE */}
+        <button 
+          className="lg:hidden text-promaroc-dark hover:text-promaroc-green transition-colors z-50"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </div>
-    </>
-  )
+
+      {/* MOBILE FULL-SCREEN MENU (Hidden on Desktop) */}
+      <div className={`fixed inset-0 bg-promaroc-white z-40 flex flex-col pt-24 px-6 lg:hidden transition-transform duration-300 ease-in-out ${
+        mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
+        <nav className="flex flex-col gap-6 text-xl font-sora font-semibold text-promaroc-dark">
+          <Link href="/services" onClick={() => setMobileMenuOpen(false)}>Services</Link>
+          <Link href="/projects" onClick={() => setMobileMenuOpen(false)}>Projects</Link>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+          <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+        </nav>
+        <div className="mt-10 pt-10 border-t border-promaroc-light">
+          <p className="text-sm text-promaroc-dark/70 mb-4">Contact us directly</p>
+          <a href="#" className="text-lg font-medium text-promaroc-green flex items-center gap-2">
+            Contact Support
+          </a>
+        </div>
+      </div>
+    </header>
+  );
 }

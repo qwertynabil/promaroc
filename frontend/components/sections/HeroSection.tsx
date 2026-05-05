@@ -1,92 +1,122 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Environment, Float, ContactShadows, PresentationControls } from '@react-three/drei'
-import { useRef } from 'react'
-import * as THREE from 'three'
-
-function AbstractPremiumBuilding() {
-  const group = useRef<THREE.Group>(null)
-
-  useFrame((state) => {
-    if (group.current) {
-      group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.1
-    }
-  })
-
-  return (
-    <group ref={group}>
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-        <mesh position={[0, 0, 0]} castShadow>
-          <boxGeometry args={[2, 3.5, 2]} />
-          <meshStandardMaterial color="#18181b" roughness={0.1} metalness={0.8} envMapIntensity={2} />
-        </mesh>
-
-        <mesh position={[0, 2.5, 0]}>
-          <coneGeometry args={[1.8, 1.5, 4]} />
-          <meshStandardMaterial
-            color="#22c55e"
-            roughness={0.2}
-            metalness={0.5}
-            emissive="#22c55e"
-            emissiveIntensity={0.5}
-          />
-        </mesh>
-
-        <mesh position={[1.5, -0.75, 0.5]} castShadow>
-          <boxGeometry args={[1.5, 2, 1.5]} />
-          <meshPhysicalMaterial
-            color="#ffffff"
-            transmission={0.9}
-            opacity={1}
-            metalness={0}
-            roughness={0}
-            ior={1.5}
-            thickness={0.5}
-          />
-        </mesh>
-      </Float>
-    </group>
-  )
-}
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { BRAND } from 'frontend/lib/constants';
 
 export default function HeroSection() {
+  // Animation variants for Apple-style smooth revealing
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Delays each child animation by 0.2s for a cascading effect
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }, // Custom easing for premium feel
+    },
+  };
+
   return (
-    <section className="relative min-h-[90vh] flex flex-col lg:flex-row items-center justify-between pt-20 pb-20 px-4 md:px-12 max-w-[1400px] mx-auto overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-green-900/20 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="relative z-10 space-y-6 w-full lg:w-1/2 text-center lg:text-left mt-10 lg:mt-0 order-2 lg:order-1">
-        <h2 className="text-zinc-400 font-medium tracking-widest uppercase text-sm">Promaroc Pro</h2>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white via-zinc-200 to-zinc-500">
-          Manage smarter. <br /> Live better.
-        </h1>
-        <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto lg:mx-0 font-medium">
-          Smart property management for the modern world. Streamline operations, automate finances, and maximize your returns.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 pt-8">
-          <Button className="rounded-full px-8 py-6 text-lg bg-white text-black hover:bg-zinc-200 transition-transform hover:scale-105">
-            Start Free Trial
-          </Button>
-          <Link href="#demo" className="text-zinc-400 hover:text-white transition-colors text-lg font-medium">
-            Watch Demo →
-          </Link>
-        </div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-promaroc-black pt-20">
+      
+      {/* BACKGROUND: 
+        Currently a premium dark gradient. 
+        Later, you can replace the div below with a Next.js <Image /> of a beautiful Riad 
+        with object-fit="cover" and a dark overlay. 
+      */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-promaroc-black via-[#111111] to-promaroc-dark opacity-100" />
+        {/* Subtle radial glow to draw the eye to the center */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-promaroc-green/10 rounded-full blur-[120px] pointer-events-none" />
       </div>
 
-      <div className="relative z-10 w-full lg:w-1/2 h-[50vh] lg:h-[80vh] order-1 lg:order-2 cursor-grab active:cursor-grabbing">
-        <Canvas camera={{ position: [5, 2, 6], fov: 45 }}>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1.5} />
-          <Environment preset="city" />
-          <PresentationControls global snap rotation={[0, -Math.PI / 4, 0]} polar={[-Math.PI / 3, Math.PI / 3]} azimuth={[-Math.PI / 1.4, Math.PI / 2]}>
-            <AbstractPremiumBuilding />
-          </PresentationControls>
-          <ContactShadows position={[0, -2.5, 0]} opacity={0.6} scale={10} blur={2.5} far={4} />
-        </Canvas>
+      <div className="container relative z-10 mx-auto px-6 max-w-5xl text-center flex flex-col items-center justify-center">
+        
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col items-center justify-center w-full"
+        >
+          {/* Eyebrow Tagline */}
+          <motion.div variants={itemVariants} className="mb-6">
+            <span className="inline-block py-1 px-3 rounded-full border border-promaroc-green/30 bg-promaroc-green/10 text-promaroc-green font-medium text-sm tracking-widest uppercase">
+              {BRAND.tagline}
+            </span>
+          </motion.div>
+
+          {/* Main Cinematic Headline */}
+          <motion.h1 
+            variants={itemVariants}
+            className="text-5xl md:text-7xl lg:text-8xl font-sora font-bold text-promaroc-white tracking-tight leading-[1.1] mb-8"
+          >
+            Maximising property <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-promaroc-white to-promaroc-light/50">
+              performance.
+            </span>
+            <br />
+            Optimising every return.
+          </motion.h1>
+
+          {/* Mission Subheadline */}
+          <motion.p 
+            variants={itemVariants}
+            className="text-lg md:text-xl text-promaroc-light/80 max-w-2xl mx-auto font-inter font-light leading-relaxed mb-12"
+          >
+            {BRAND.mission}
+          </motion.p>
+
+          {/* Call to Action Buttons */}
+          <motion.div 
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
+          >
+            <Link 
+              href="/contact" 
+              className="group flex items-center justify-center gap-2 bg-promaroc-white text-promaroc-black px-8 py-4 rounded-full font-semibold text-base hover:bg-promaroc-green hover:text-promaroc-white transition-all duration-300 w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(15,61,55,0.4)]"
+            >
+              Start Optimizing
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            
+            <Link 
+              href="/projects" 
+              className="group flex items-center justify-center gap-2 bg-transparent border border-promaroc-white/20 text-promaroc-white px-8 py-4 rounded-full font-medium text-base hover:bg-promaroc-white/10 transition-all duration-300 w-full sm:w-auto"
+            >
+              View Our Portfolio
+            </Link>
+          </motion.div>
+
+        </motion.div>
       </div>
+
+      {/* Scroll Down Indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-promaroc-white/50"
+      >
+        <span className="text-xs uppercase tracking-widest font-medium">Scroll to explore</span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+        >
+          <ChevronDown className="w-5 h-5" />
+        </motion.div>
+      </motion.div>
+
     </section>
-  )
+  );
 }

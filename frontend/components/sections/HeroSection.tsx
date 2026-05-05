@@ -1,13 +1,13 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { BRAND } from 'frontend/lib/constants';
+import { BRAND } from '@/lib/constants';
 
 export default function HeroSection() {
   // Animation variants for Apple-style smooth revealing
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -18,7 +18,7 @@ export default function HeroSection() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,

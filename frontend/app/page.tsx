@@ -1,9 +1,9 @@
-import HeroSection from 'frontend/components/sections/HeroSection';
-import TrustBar from 'frontend/components/sections/TrustBar';
-import ValuePropSection from 'frontend/components/sections/ValuePropSection';
-import ServicesBentoGrid from 'frontend/components/sections/ServicesBentoGrid';
-import FeaturedProjects from 'frontend/components/sections/FeaturedProjects';
-import HomeContactCTA from 'frontend/components/sections/HomeContactCTA';
+import HeroSection from '@/components/sections/HeroSection';
+import TrustBar from '@/components/sections/TrustBar';
+import ValuePropSection from '@/components/sections/ValuePropSection';
+import ServicesBentoGrid from '@/components/sections/ServicesBentoGrid';
+import FeaturedProjects from '@/components/sections/FeaturedProjects';
+import HomeContactCTA from '@/components/sections/HomeContactCTA';
 
 export default function Home() {
   return (

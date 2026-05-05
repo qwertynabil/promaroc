@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { 
   Building2, 
   Home, 
@@ -14,7 +14,7 @@ import {
   CheckCircle2,
   MessageCircle
 } from 'lucide-react';
-import { BRAND } from 'frontend/lib/constants';
+import { BRAND } from '@/lib/constants';
 
 // Step Options Data
 const PROPERTY_TYPES = [
@@ -69,9 +69,9 @@ export default function ContactPage() {
   };
 
   // Animation variants for smooth step transitions
-  const formVariants = {
+  const formVariants: Variants = {
     hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] } },
     exit: { opacity: 0, x: -50, transition: { duration: 0.3 } }
   };
 

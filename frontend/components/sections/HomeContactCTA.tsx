@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, MessageCircle } from 'lucide-react';
-import { BRAND } from 'frontend/lib/constants';
+import { BRAND } from '@/lib/constants';
 
 export default function HomeContactCTA() {
   return (

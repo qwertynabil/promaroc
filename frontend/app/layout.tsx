@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 import "./globals.css";
-import Header from "frontend/components/layout/Header";
+import Header from "@/components/layout/Header";
 
 // 1. Configure the Body Font (Inter)
 const inter = Inter({ 

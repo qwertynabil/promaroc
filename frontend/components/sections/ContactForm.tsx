@@ -1,11 +1,11 @@
 'use client'
 
-import { Button } from 'frontend/components/ui/button'
-import { Input } from 'frontend/components/ui/input'
-import { Textarea } from 'frontend/components/ui/textarea'
-import { Card } from 'frontend/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Card } from '@/components/ui/card'
 import { Mail, Phone, MapPin } from 'lucide-react'
-import { useContactForm } from 'frontend/hooks/useContactForm'
+import { useContactForm } from '@/hooks/useContactForm'
 
 export default function ContactForm() {
   const { formData, handleChange, handleSubmit, message, messageType } = useContactForm()

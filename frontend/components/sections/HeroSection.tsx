@@ -28,18 +28,14 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-promaroc-black pt-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       
-      {/* BACKGROUND: 
-        Currently a premium dark gradient. 
-        Later, you can replace the div below with a Next.js <Image /> of a beautiful Riad 
-        with object-fit="cover" and a dark overlay. 
-      */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-promaroc-black via-[#111111] to-promaroc-dark opacity-100" />
-        {/* Subtle radial glow to draw the eye to the center */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-promaroc-green/10 rounded-full blur-[120px] pointer-events-none" />
-      </div>
+      {/* BACKGROUND IMAGE & OVERLAY */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?q=80&w=1524&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=2000&auto=format&fit=crop')` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-promaroc-black via-promaroc-black/70 to-transparent z-0" />
 
       <div className="container relative z-10 mx-auto px-6 max-w-5xl text-center flex flex-col items-center justify-center">
         
@@ -49,24 +45,17 @@ export default function HeroSection() {
           animate="visible"
           className="flex flex-col items-center justify-center w-full"
         >
-          {/* Eyebrow Tagline */}
-          <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-block py-1 px-3 rounded-full border border-promaroc-green/30 bg-promaroc-green/10 text-promaroc-green font-medium text-sm tracking-widest uppercase">
-              {BRAND.tagline}
-            </span>
-          </motion.div>
+        
 
           {/* Main Cinematic Headline */}
           <motion.h1 
             variants={itemVariants}
             className="text-5xl md:text-7xl lg:text-8xl font-sora font-bold text-promaroc-white tracking-tight leading-[1.1] mb-8"
           >
-            Maximising property <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-promaroc-white to-promaroc-light/50">
-              performance.
+            Property Revenue <br className="hidden md:block" />
+            <span className="text-promaroc-orange">
+              Optimization.
             </span>
-            <br />
-            Optimising every return.
           </motion.h1>
 
           {/* Mission Subheadline */}
@@ -108,7 +97,6 @@ export default function HeroSection() {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-promaroc-white/50"
       >
-        <span className="text-xs uppercase tracking-widest font-medium">Scroll to explore</span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}

@@ -114,7 +114,7 @@ export default function ServicesBentoGrid() {
                 <ul className="space-y-3 mb-10">
                   {service.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-promaroc-dark font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-promaroc-green" />
+                      <CheckCircle2 className="w-4 h-4 text-promaroc-orange" />
                       {feature}
                     </li>
                   ))}

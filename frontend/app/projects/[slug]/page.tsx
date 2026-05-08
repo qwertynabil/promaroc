@@ -1,12 +1,12 @@
 'use client';
 
+import { use } from 'react'; // 1. Import the 'use' hook
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, MapPin, TrendingUp, CalendarCheck, Globe, Star } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 // Mock Database for your Case Studies
-// Later, you will fetch this data from your PostgreSQL backend!
 const PROJECTS_DB: Record<string, any> = {
   'riad-al-maqam': {
     title: 'Riad Al Maqam',
@@ -19,7 +19,7 @@ const PROJECTS_DB: Record<string, any> = {
       { id: 2, label: 'Direct Bookings', value: '32%', icon: Globe },
       { id: 3, label: 'Avg. Occupancy', value: '88%', icon: CalendarCheck },
     ],
-    widgetId: 'YOUR_ELFSIGHT_OR_TRUSTINDEX_WIDGET_ID' // Placeholder for the review widget
+    widgetId: 'YOUR_ELFSIGHT_OR_TRUSTINDEX_WIDGET_ID' 
   },
   'villa-palmeraie': {
     title: 'Villa Palmeraie',
@@ -36,9 +36,13 @@ const PROJECTS_DB: Record<string, any> = {
   }
 };
 
-export default function ProjectCaseStudy({ params }: { params: { slug: string } }) {
-  // Find the project based on the URL slug
-  const project = PROJECTS_DB[params.slug];
+// 2. Change the params type to be a Promise
+export default function ProjectCaseStudy({ params }: { params: Promise<{ slug: string }> }) {
+  // 3. Unwrap the params using React.use()
+  const resolvedParams = use(params);
+  
+  // Find the project based on the unwrapped URL slug
+  const project = PROJECTS_DB[resolvedParams.slug];
 
   // If the URL is wrong (e.g., /projects/fake-riad), show a 404 page automatically
   if (!project) {
@@ -165,13 +169,6 @@ export default function ProjectCaseStudy({ params }: { params: { slug: string } 
 
             {/* WIDGET CONTAINER */}
             <div className="bg-promaroc-white rounded-3xl p-8 md:p-12 shadow-sm border border-promaroc-light min-h-[300px] flex items-center justify-center relative overflow-hidden">
-              
-              {/* HOW TO ADD YOUR REAL REVIEWS:
-                1. Go to Elfsight.com or Trustindex.io
-                2. Connect your property's Booking.com/Airbnb link
-                3. Copy the HTML <div> or <script> code they give you
-                4. Paste it right here replacing the placeholder text!
-              */}
               
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-4 text-yellow-400">

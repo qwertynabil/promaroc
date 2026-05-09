@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { Variants } from 'framer-motion';
 import { 
   MonitorSmartphone, 
   TrendingUp, 
@@ -59,7 +60,7 @@ export default function ServicesBentoGrid() {
   };
 
   return (
-    <section className="bg-promaroc-light/20 py-32 relative">
+    <section className="bg-black/5 dark:bg-black py-32 relative transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-6xl">
         
         {/* Section Header */}
@@ -68,17 +69,17 @@ export default function ServicesBentoGrid() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-sora font-bold text-promaroc-black mb-6"
+            className="text-4xl md:text-5xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6"
           >
             A 360° Approach to <br/>
-            <span className="text-promaroc-green">Property Management.</span>
+            <span className="text-promaroc-green dark:text-promaroc-white">Property Management.</span>
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-promaroc-dark/70 font-inter"
+            className="text-lg text-black/70 dark:text-white/70 font-inter"
           >
             From the first click on a booking platform to the final checkout at your Riad, we optimize every touchpoint.
           </motion.p>
@@ -113,8 +114,8 @@ export default function ServicesBentoGrid() {
 
                 <ul className="space-y-3 mb-10">
                   {service.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm text-promaroc-dark font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-promaroc-orange" />
+                  <li key={i} className="flex items-center gap-3 text-sm text-promaroc-black dark:text-promaroc-white font-medium">
+                    <CheckCircle2 className="w-4 h-4 text-promaroc-orange dark:text-white" />
                       {feature}
                     </li>
                   ))}
@@ -123,14 +124,14 @@ export default function ServicesBentoGrid() {
 
               <Link 
                 href={service.href}
-                className="inline-flex items-center gap-2 font-semibold text-sm text-promaroc-green group-hover:text-promaroc-black transition-colors z-10 w-fit"
+              className="inline-flex items-center gap-2 font-semibold text-sm text-promaroc-black dark:text-promaroc-white group-hover:text-black/60 dark:group-hover:text-white/60 transition-colors z-10 w-fit"
               >
                 Explore this service
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               {/* Decorative subtle background element that appears on hover */}
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-promaroc-green/5 rounded-full blur-3xl group-hover:bg-promaroc-green/10 transition-colors duration-500 pointer-events-none" />
+            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-black/5 rounded-full blur-3xl group-hover:bg-black/10 dark:bg-white/5 dark:group-hover:bg-white/10 transition-colors duration-500 pointer-events-none" />
             </motion.div>
           ))}
         </motion.div>

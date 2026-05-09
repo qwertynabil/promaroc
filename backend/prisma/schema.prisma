@@ -1,14 +1,21 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// 1. This generates types for the Backend
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"] // Needed for Alpine Linux in Docker
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
+
+// 2. This pushes a copy of the types directly into the Frontend!
+generator client_frontend {
+  provider = "prisma-client-js"
+  output   = "../../frontend/node_modules/.prisma/client" // <--- CHANGED @ TO .
+}
+
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // 1. Table for Contact Form Submissions
@@ -16,20 +23,117 @@ model ContactMessage {
   id        String   @id @default(uuid())
   name      String
   email     String
-  phone     String?  // The ? makes it optional
+  phone     String?  
   message   String
-  isRead    Boolean  @default(false) // So the admin knows if they checked it
+  isRead    Boolean  @default(false) 
   createdAt DateTime @default(now())
 }
 
-// 2. Table for the Dynamic Portfolio
+// 2. Main Table for Portfolio Projects
 model PortfolioProject {
+  id              String   @id @default(uuid())
+  slug            String   @unique // Used for URLs: /projects/riad-al-maqam
+  title           String
+  category        String   // e.g., 'Riad', 'Villa', 'Boutique Hotel'
+  location        String   // e.g., 'Marrakech Medina'
+
+  // Long-form content for the Case Study Page
+  challenge       String?  // The problem the property faced
+  solution        String?  // How Promaroc fixed it
+
+  // Media (You can add gallery arrays later if needed)
+  heroImage       String?  // Used in both the grid and the top of the case study
+
+  // Primary Metric (Shown on the main /projects grid)
+  mainMetricValue String?  // e.g., '+45%'
+  mainMetricLabel String?  // e.g., 'Revenue Increase'
+
+  // Third-party Integrations
+  widgetId        String?  // ID for Elfsight/Trustindex Booking.com reviews
+
+  // Admin Dashboard Controls
+  clientName      String?  
+  projectUrl      String?  
+  isPublished     Boolean  @default(false) // Allows Admins to save as 'Draft' before publishing
+
+  // Relationships
+  metrics         ProjectMetric[] // One-to-Many relation: A project can have multiple bento box metrics
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// 3. Table for Case Study Bento Box Metrics (e.g. 98% Occupancy)
+model ProjectMetric {
   id          String   @id @default(uuid())
-  title       String
-  description String
-  imageUrl    String?  // Optional link to an image (can be stored on Hostinger or AWS S3)
-  clientName  String?  
-  projectUrl  String?  // Link to the actual project if it has one
+  value       String   // e.g., '98%'
+  label       String   // e.g., 'Peak Occupancy'
+  iconName    String   // e.g., 'TrendingUp', 'Globe', 'Star' (Tells the frontend which Lucide icon to use)
+
+  // Relation back to the PortfolioProject
+  projectId   String
+  project     PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ==========================================
+// AUTHENTICATION TABLES (Auth.js)
+// ==========================================
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?   // NEW: Hashed password
+  phone         String?   // Added Phone
+  country       String?   // Added Country
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(USER)
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

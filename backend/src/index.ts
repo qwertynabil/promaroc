@@ -1,23 +1,28 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 const app = express();
-// Initialize Prisma to talk to PostgreSQL
-const prisma = new PrismaClient(); 
-const PORT = process.env.PORT || 5000;
 
+// Initialize Prisma 7 to talk to PostgreSQL using the Driver Adapter
+const pool = new Pool({ connectionString: process.env.DATABASE_URL as string });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter }); 
+
+const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors()); // Allows your Vercel frontend to bypass security and connect
 app.use(express.json()); // Allows the API to understand JSON data
 
 // 1. Health Check Route (To test if the server is online)
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.json({ status: 'online', message: 'Promaroc API is running!' });
 });
 
 // 2. Contact Form Route (Receives data from Vercel and saves it)
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', async (req: Request, res: Response) => {
   try {
     const { name, email, phone, message } = req.body;
     
@@ -39,7 +44,7 @@ app.post('/api/contact', async (req, res) => {
 });
 
 // 3. Portfolio Route (Fetches projects to display on the Vercel frontend)
-app.get('/api/portfolio', async (req, res) => {
+app.get('/api/portfolio', async (req: Request, res: Response) => {
   try {
     // Get all projects, newest first
     const projects = await prisma.portfolioProject.findMany({

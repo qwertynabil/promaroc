@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Building2, 
   Home, 
@@ -15,7 +15,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
-
+import { Variants } from 'framer-motion';
 // Step Options Data
 const PROPERTY_TYPES = [
   { id: 'riad', label: 'Riad', icon: Home },
@@ -42,7 +42,6 @@ export default function ContactPage() {
     name: '',
     email: '',
     phone: '',
-    message: ''
   });
 
   const updateFormData = (key: string, value: string) => {
@@ -56,78 +55,108 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Here is where you connect to the backend we built earlier!
-    // Example: 
-    // await fetch('http://YOUR_HOSTINGER_IP:5000/api/contact', { ... })
-    
-    // Simulating API call delay for now
-    setTimeout(() => {
+    try {
+      // 🔒 SECURE CONNECTION: We call the Next.js API Proxy, NOT the backend directly.
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          // Combine the beautiful visual steps into a structured message for the DB
+          message: `Property Type: ${formData.propertyType} | Service Needed: ${formData.serviceNeeded}`
+        }),
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setStep(4);
+      } else {
+        alert("Something went wrong on the server. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network Error:", error);
+      alert("Could not connect. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-      setStep(4);
-    }, 1500);
+    }
   };
 
   // Animation variants for smooth step transitions
   const formVariants: Variants = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] } },
-    exit: { opacity: 0, x: -50, transition: { duration: 0.3 } }
+    hidden: { opacity: 0, x: 20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
   };
 
   return (
-    <div className="min-h-screen bg-promaroc-light/20 pt-32 pb-20 flex items-center justify-center">
-      <div className="container mx-auto px-6 max-w-4xl flex flex-col md:flex-row gap-16 items-center">
+    <div className="min-h-screen bg-promaroc-white dark:bg-promaroc-black pt-32 pb-20 flex items-center justify-center relative overflow-hidden transition-colors duration-300">
+      
+      {/* Cinematic Background Glows */}
+      <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-promaroc-green/10 dark:bg-white/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-promaroc-green/5 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 max-w-5xl flex flex-col lg:flex-row gap-16 items-center relative z-10">
         
         {/* Left Side: Context & WhatsApp */}
-        <div className="w-full md:w-1/2 space-y-8">
+        <div className="w-full lg:w-1/2 space-y-8 text-center lg:text-left">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-sora font-bold text-promaroc-black mb-6 leading-tight">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black/70 dark:text-promaroc-white/70 font-medium text-sm tracking-widest uppercase mb-6">
+              Free Portfolio Audit
+            </div>
+            <h1 className="text-5xl md:text-6xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6 leading-tight tracking-tight">
               Let's optimize <br/>
-              <span className="text-promaroc-green">your property.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-promaroc-black to-promaroc-black/50 dark:from-promaroc-white dark:to-promaroc-white/50">
+                your property.
+              </span>
             </h1>
-            <p className="text-lg text-promaroc-dark/70 font-inter leading-relaxed mb-8">
-              Fill out the form to request a free portfolio audit, or reach out to us directly on WhatsApp for an immediate response.
+            <p className="text-lg text-black/60 dark:text-promaroc-white/60 font-inter leading-relaxed mb-10 max-w-md mx-auto lg:mx-0">
+              Fill out the form to request an audit, or reach out to us directly on WhatsApp for an immediate response from our team.
             </p>
 
             <a 
               href={BRAND.socials.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-promaroc-white border border-promaroc-light px-6 py-4 rounded-2xl hover:border-promaroc-green hover:shadow-md transition-all duration-300 group"
+              className="inline-flex items-center gap-4 bg-black/5 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/10 px-8 py-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 hover:border-black/30 dark:hover:border-white/30 transition-all duration-300 group"
             >
-              <div className="bg-green-100 text-green-600 p-3 rounded-full group-hover:scale-110 transition-transform">
+              <div className="bg-black/10 text-promaroc-black dark:bg-white/10 dark:text-promaroc-white p-3 rounded-full group-hover:scale-110 transition-transform">
                 <MessageCircle className="w-6 h-6" />
               </div>
-              <div>
-                <div className="font-sora font-semibold text-promaroc-black">Chat on WhatsApp</div>
-                <div className="text-sm text-promaroc-dark/60">{BRAND.contact.phone}</div>
+              <div className="text-left">
+                <div className="font-sora font-semibold text-promaroc-black dark:text-promaroc-white">Chat on WhatsApp</div>
+                <div className="text-sm text-black/50 dark:text-promaroc-white/50">{BRAND.contact.phone}</div>
               </div>
             </a>
           </motion.div>
         </div>
 
-        {/* Right Side: The Multi-Step Form */}
-        <div className="w-full md:w-1/2">
-          <div className="bg-promaroc-white rounded-[2rem] p-8 md:p-12 shadow-xl border border-promaroc-light relative overflow-hidden min-h-[500px] flex flex-col">
+        {/* Right Side: The Premium Glassmorphic Form */}
+        <div className="w-full lg:w-1/2">
+          <div className="bg-black/5 dark:bg-white/5 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-black/10 dark:border-white/10 relative overflow-hidden min-h-[550px] flex flex-col">
             
             {/* Progress Bar */}
             {!isSuccess && (
-              <div className="mb-8">
-                <div className="flex justify-between text-xs font-semibold text-promaroc-dark/50 uppercase tracking-widest mb-3">
+              <div className="mb-10">
+                <div className="flex justify-between text-xs font-semibold text-black/40 dark:text-promaroc-white/40 uppercase tracking-widest mb-4">
                   <span>Step {step} of 3</span>
-                  <span>{step === 1 ? 'Property' : step === 2 ? 'Needs' : 'Details'}</span>
+                  <span className="text-promaroc-black dark:text-promaroc-white">
+                    {step === 1 ? 'Property Type' : step === 2 ? 'Required Service' : 'Your Details'}
+                  </span>
                 </div>
-                <div className="h-1.5 w-full bg-promaroc-light rounded-full overflow-hidden">
+                <div className="h-1 w-full bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
                   <motion.div 
-                    className="h-full bg-promaroc-green rounded-full"
+                    className="h-full bg-promaroc-black dark:bg-promaroc-white rounded-full dark:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                     initial={{ width: '33%' }}
                     animate={{ width: `${(step / 3) * 100}%` }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 </div>
               </div>
@@ -140,22 +169,22 @@ export default function ContactPage() {
                 {/* STEP 1: Property Type */}
                 {step === 1 && (
                   <motion.div key="step1" variants={formVariants} initial="hidden" animate="visible" exit="exit">
-                    <h2 className="text-2xl font-sora font-bold text-promaroc-black mb-6">What type of property do you own?</h2>
+                <h2 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6">What type of property do you own?</h2>
                     <div className="grid grid-cols-1 gap-4">
                       {PROPERTY_TYPES.map(type => (
                         <button
                           key={type.id}
-                          onClick={() => { updateFormData('propertyType', type.id); nextStep(); }}
-                          className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
-                            formData.propertyType === type.id 
-                              ? 'border-promaroc-green bg-promaroc-green/5' 
-                              : 'border-promaroc-light hover:border-promaroc-green/30 hover:bg-promaroc-light/20'
+                          onClick={() => { updateFormData('propertyType', type.label); nextStep(); }}
+                          className={`flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 text-left group ${
+                            formData.propertyType === type.label 
+                          ? 'border-promaroc-black bg-black/10 dark:border-white dark:bg-white/10' 
+                          : 'border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5 hover:border-black/30 hover:bg-black/10 dark:hover:border-white/30 dark:hover:bg-white/10'
                           }`}
                         >
-                          <div className={`p-3 rounded-xl ${formData.propertyType === type.id ? 'bg-promaroc-green text-promaroc-white' : 'bg-promaroc-light text-promaroc-dark'}`}>
+                      <div className={`p-3 rounded-xl transition-colors ${formData.propertyType === type.label ? 'bg-promaroc-black text-promaroc-white dark:bg-promaroc-white dark:text-promaroc-black' : 'bg-black/10 text-black/70 dark:bg-white/10 dark:text-promaroc-white/70 group-hover:text-promaroc-black dark:group-hover:text-promaroc-white'}`}>
                             <type.icon className="w-6 h-6" />
                           </div>
-                          <span className="font-semibold text-promaroc-black text-lg">{type.label}</span>
+                      <span className="font-semibold text-promaroc-black dark:text-promaroc-white text-lg">{type.label}</span>
                         </button>
                       ))}
                     </div>
@@ -165,22 +194,22 @@ export default function ContactPage() {
                 {/* STEP 2: Services Needed */}
                 {step === 2 && (
                   <motion.div key="step2" variants={formVariants} initial="hidden" animate="visible" exit="exit">
-                    <h2 className="text-2xl font-sora font-bold text-promaroc-black mb-6">What do you need help with?</h2>
+                <h2 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6">What do you need help with?</h2>
                     <div className="grid grid-cols-1 gap-4">
                       {SERVICES_NEEDED.map(service => (
                         <button
                           key={service.id}
-                          onClick={() => { updateFormData('serviceNeeded', service.id); nextStep(); }}
-                          className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
-                            formData.serviceNeeded === service.id 
-                              ? 'border-promaroc-green bg-promaroc-green/5' 
-                              : 'border-promaroc-light hover:border-promaroc-green/30 hover:bg-promaroc-light/20'
+                          onClick={() => { updateFormData('serviceNeeded', service.label); nextStep(); }}
+                          className={`flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 text-left group ${
+                            formData.serviceNeeded === service.label 
+                          ? 'border-promaroc-black bg-black/10 dark:border-white dark:bg-white/10' 
+                          : 'border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5 hover:border-black/30 hover:bg-black/10 dark:hover:border-white/30 dark:hover:bg-white/10'
                           }`}
                         >
-                          <div className={`p-3 rounded-xl ${formData.serviceNeeded === service.id ? 'bg-promaroc-green text-promaroc-white' : 'bg-promaroc-light text-promaroc-dark'}`}>
+                      <div className={`p-3 rounded-xl transition-colors ${formData.serviceNeeded === service.label ? 'bg-promaroc-black text-promaroc-white dark:bg-promaroc-white dark:text-promaroc-black' : 'bg-black/10 text-black/70 dark:bg-white/10 dark:text-promaroc-white/70 group-hover:text-promaroc-black dark:group-hover:text-promaroc-white'}`}>
                             <service.icon className="w-5 h-5" />
                           </div>
-                          <span className="font-semibold text-promaroc-black text-base">{service.label}</span>
+                      <span className="font-semibold text-promaroc-black dark:text-promaroc-white text-base">{service.label}</span>
                         </button>
                       ))}
                     </div>
@@ -189,51 +218,50 @@ export default function ContactPage() {
 
                 {/* STEP 3: Contact Details */}
                 {step === 3 && (
-                  <motion.form key="step3" onSubmit={handleSubmit} variants={formVariants} initial="hidden" animate="visible" exit="exit" className="space-y-4">
-                    <h2 className="text-2xl font-sora font-bold text-promaroc-black mb-6">How can we reach you?</h2>
+                  <motion.form key="step3" onSubmit={handleSubmit} variants={formVariants} initial="hidden" animate="visible" exit="exit" className="space-y-5">
+                    <h2 className="text-2xl font-sora font-bold text-promaroc-white mb-6">How can we reach you?</h2>
                     
                     <div>
-                      <label className="block text-sm font-medium text-promaroc-dark mb-1">Full Name</label>
+                      <label className="block text-sm font-medium text-promaroc-white/70 mb-2 ml-1">Full Name</label>
                       <input 
                         required
                         type="text" 
                         value={formData.name}
                         onChange={(e) => updateFormData('name', e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-promaroc-light focus:border-promaroc-green focus:ring-2 focus:ring-promaroc-green/20 outline-none transition-all"
-                        placeholder="John Doe"
+                        className="w-full px-5 py-4 rounded-xl border border-white/10 bg-black/40 text-promaroc-white placeholder:text-white/20 focus:border-promaroc-green focus:ring-1 focus:ring-promaroc-green outline-none transition-all"
+                        placeholder="e.g. John Doe"
                       />
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-promaroc-dark mb-1">Email</label>
-                        <input 
-                          required
-                          type="email" 
-                          value={formData.email}
-                          onChange={(e) => updateFormData('email', e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-promaroc-light focus:border-promaroc-green focus:ring-2 focus:ring-promaroc-green/20 outline-none transition-all"
-                          placeholder="john@example.com"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-promaroc-dark mb-1">Phone</label>
-                        <input 
-                          type="tel" 
-                          value={formData.phone}
-                          onChange={(e) => updateFormData('phone', e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-promaroc-light focus:border-promaroc-green focus:ring-2 focus:ring-promaroc-green/20 outline-none transition-all"
-                          placeholder="+212 ..."
-                        />
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-promaroc-white/70 mb-2 ml-1">Email Address</label>
+                      <input 
+                        required
+                        type="email" 
+                        value={formData.email}
+                        onChange={(e) => updateFormData('email', e.target.value)}
+                        className="w-full px-5 py-4 rounded-xl border border-white/10 bg-black/40 text-promaroc-white placeholder:text-white/20 focus:border-promaroc-green focus:ring-1 focus:ring-promaroc-green outline-none transition-all"
+                        placeholder="e.g. john@example.com"
+                      />
+                    </div>
+
+                    <div>
+                  <label className="block text-sm font-medium text-black/70 dark:text-promaroc-white/70 mb-2 ml-1">WhatsApp / Phone</label>
+                      <input 
+                        type="tel" 
+                        value={formData.phone}
+                        onChange={(e) => updateFormData('phone', e.target.value)}
+                    className="w-full px-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-white/40 dark:bg-black/40 text-promaroc-black dark:text-promaroc-white placeholder:text-black/30 dark:placeholder:text-white/20 focus:border-promaroc-black dark:focus:border-white focus:ring-1 focus:ring-promaroc-black dark:focus:ring-white outline-none transition-all"
+                        placeholder="+212 ..."
+                      />
                     </div>
 
                     <button 
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full mt-6 bg-promaroc-black text-promaroc-white py-4 rounded-xl font-semibold hover:bg-promaroc-green transition-colors flex items-center justify-center gap-2"
+                  className="w-full mt-4 bg-promaroc-black text-promaroc-white dark:bg-promaroc-white dark:text-promaroc-black py-4 rounded-xl font-bold hover:bg-black/80 dark:hover:bg-white/80 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Sending...' : 'Submit Request'}
+                      {isSubmitting ? 'Submitting...' : 'Submit Request'}
                       {!isSubmitting && <ArrowRight className="w-5 h-5" />}
                     </button>
                   </motion.form>
@@ -241,19 +269,19 @@ export default function ContactPage() {
 
                 {/* STEP 4: Success State */}
                 {step === 4 && isSuccess && (
-                  <motion.div key="step4" variants={formVariants} initial="hidden" animate="visible" className="flex flex-col items-center justify-center h-full text-center py-10">
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6">
-                      <CheckCircle2 className="w-10 h-10" />
+                  <motion.div key="step4" variants={formVariants} initial="hidden" animate="visible" className="flex flex-col items-center justify-center h-full text-center py-12">
+                <div className="w-24 h-24 bg-black/10 dark:bg-white/20 rounded-full flex items-center justify-center text-promaroc-black dark:text-promaroc-white mb-8 dark:shadow-[0_0_50px_rgba(255,255,255,0.2)]">
+                      <CheckCircle2 className="w-12 h-12" />
                     </div>
-                    <h2 className="text-3xl font-sora font-bold text-promaroc-black mb-4">Request Received!</h2>
-                    <p className="text-promaroc-dark/70 font-inter mb-8">
-                      Thank you for reaching out, {formData.name || 'there'}. Our team will review your property details and get back to you within 24 hours.
+                <h2 className="text-3xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-4">Request Received.</h2>
+                <p className="text-black/60 dark:text-promaroc-white/60 font-inter mb-10 max-w-sm">
+                      Thank you, {formData.name || 'there'}. Our optimization team will review your property details and reach out within 24 hours.
                     </p>
                     <button 
                       onClick={() => window.location.href = '/'}
-                      className="bg-promaroc-light/50 text-promaroc-black px-6 py-3 rounded-full font-medium hover:bg-promaroc-light transition-colors"
+                  className="bg-black/5 text-promaroc-black dark:bg-white/10 dark:text-promaroc-white px-8 py-3 rounded-full font-medium hover:bg-black/10 dark:hover:bg-white/20 border border-black/10 dark:border-white/10 transition-colors"
                     >
-                      Return Home
+                      Return to Home
                     </button>
                   </motion.div>
                 )}
@@ -263,10 +291,10 @@ export default function ContactPage() {
 
             {/* Navigation Buttons for Steps 2 and 3 */}
             {step > 1 && step < 4 && (
-              <div className="mt-8 pt-6 border-t border-promaroc-light flex justify-start">
+          <div className="mt-8 pt-6 border-t border-black/10 dark:border-white/10 flex justify-start">
                 <button 
                   onClick={prevStep}
-                  className="flex items-center gap-2 text-promaroc-dark/60 hover:text-promaroc-black font-medium transition-colors"
+              className="flex items-center gap-2 text-black/50 dark:text-promaroc-white/50 hover:text-promaroc-black dark:hover:text-promaroc-white font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" /> Back
                 </button>

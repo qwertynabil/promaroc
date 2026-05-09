@@ -43,7 +43,7 @@ model PortfolioProject {
 
   // Media (You can add gallery arrays later if needed)
   heroImage       String?  // Used in both the grid and the top of the case study
-
+  galleryImages   String[] // NEW: The [] tells Prisma it's an array of strings!
   // Primary Metric (Shown on the main /projects grid)
   mainMetricValue String?  // e.g., '+45%'
   mainMetricLabel String?  // e.g., 'Revenue Increase'

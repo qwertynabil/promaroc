@@ -28,10 +28,10 @@ export default function Header() {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-promaroc-black border-b border-white/10 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'py-4 shadow-lg' 
-          : 'py-6'
+          ? 'py-3 bg-promaroc-black/80 backdrop-blur-xl shadow-lg border-b border-white/10' 
+          : 'py-5 bg-transparent border-b border-transparent'
       }`}
     >
       <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
@@ -112,11 +112,24 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* CALL TO ACTION BUTTON */}
+        {/* UTILITY & CALL TO ACTION */}
         <div className="hidden lg:flex items-center gap-4">
           <Link 
+            href="/login" 
+            className="text-sm font-semibold text-promaroc-white/80 hover:text-promaroc-white transition-colors"
+          >
+            Log in
+          </Link>
+          <Link 
+            href="/login" 
+            className="text-sm font-semibold text-promaroc-black bg-promaroc-white/90 hover:bg-promaroc-white px-4 py-2 rounded-full transition-colors"
+          >
+            Sign up
+          </Link>
+          <div className="w-[1px] h-6 bg-white/20 mx-2"></div>
+          <Link 
             href="/contact" 
-            className="group flex items-center gap-2 bg-promaroc-white text-promaroc-black px-6 py-2.5 rounded-full font-medium text-sm hover:bg-promaroc-green hover:text-promaroc-white transition-all duration-300 shadow-md hover:shadow-lg"
+            className="group flex items-center gap-2 bg-promaroc-green text-promaroc-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#0a2e29] transition-all duration-300 shadow-md"
           >
             Optimize My Property
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -136,13 +149,17 @@ export default function Header() {
       <div className={`fixed inset-0 bg-promaroc-black z-40 flex flex-col pt-24 px-6 lg:hidden transition-transform duration-300 ease-in-out ${
         mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
-        <nav className="flex flex-col gap-6 text-xl font-sora font-semibold text-promaroc-white">
+        <nav className="flex flex-col gap-6 text-2xl font-sora font-semibold text-promaroc-white">
           <Link href="/services" onClick={() => setMobileMenuOpen(false)}>Services</Link>
           <Link href="/projects" onClick={() => setMobileMenuOpen(false)}>Projects</Link>
           <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
           <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
         </nav>
         <div className="mt-10 pt-10 border-t border-white/10">
+          <div className="flex flex-col gap-4 mb-8">
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-promaroc-white/80 hover:text-promaroc-white">Log in</Link>
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-promaroc-black bg-promaroc-white px-6 py-3 rounded-xl text-center shadow-md">Sign up</Link>
+          </div>
           <p className="text-sm text-promaroc-white/50 mb-4">Contact us directly</p>
           <a href="#" className="text-lg font-medium text-promaroc-green flex items-center gap-2">
             Contact Support

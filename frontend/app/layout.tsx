@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
 // 1. Configure the Body Font (Inter)
 const inter = Inter({ 
@@ -31,10 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${sora.variable}`}>
-        <Header /> {/* Inject the header here */}
-        <main className="min-h-screen pt-24"> {/* Add pt-24 so content isn't hidden under the fixed header */}
+        <ConditionalLayout>
           {children}
-        </main>
+        </ConditionalLayout>
       </body>
     </html>
   );

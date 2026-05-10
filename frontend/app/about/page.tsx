@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import { Card } from '@/components/ui/card'
 import { Target, Users, Zap, CheckCircle } from 'lucide-react'
 
@@ -28,9 +26,8 @@ export default function About() {
   ]
 
   return (
-    <div>
-      <Header />
-      <main className="pt-16 min-h-screen">
+    <>
+      <main className="pt-32 min-h-screen">
         <section className="py-20 bg-gradient-to-b from-blue-50 to-white">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -126,7 +123,6 @@ export default function About() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   )
 }

@@ -1,60 +1,69 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-900 text-slate-100 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+    <footer className="bg-promaroc-black text-promaroc-white border-t border-white/10 pt-20 pb-10">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+          
           {/* Company Info */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white">Promaroc</h3>
-            <p className="text-sm text-slate-400">Smart property management solutions for modern managers.</p>
+          <div className="lg:col-span-2 space-y-6">
+            <Link href="/" className="inline-block">
+              <Image
+                src="/logowhite.png"
+                alt="Promaroc Logo"
+                width={300}
+                height={60}
+                className="h-10 w-auto"
+              />
+            </Link>
+            <p className="text-promaroc-white/60 font-inter leading-relaxed max-w-sm">
+              Maximising property performance. Optimising every return through data-driven insights, strategic positioning, and operational excellence.
+            </p>
           </div>
 
-          {/* Product */}
+          {/* Services */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-white">Product</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li><Link href="/" className="hover:text-white transition-colors">Features</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Security</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Documentation</Link></li>
+            <h4 className="font-sora font-semibold text-lg text-promaroc-white">Services</h4>
+            <ul className="space-y-3 text-sm font-inter text-promaroc-white/60">
+              <li><Link href="/services/digital" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-flex items-center">Digital Presence</Link></li>
+              <li><Link href="/services/onsite" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-flex items-center">On-Site Management</Link></li>
+              <li><Link href="/services/revenue" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-flex items-center">Revenue Optimization</Link></li>
+              <li><Link href="/services" className="hover:text-promaroc-green transition-colors inline-flex items-center gap-1 mt-2 font-medium text-promaroc-white">View all services <ArrowRight className="w-3 h-3" /></Link></li>
             </ul>
           </div>
 
           {/* Company */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-white">Company</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Press</Link></li>
+            <h4 className="font-sora font-semibold text-lg text-promaroc-white">Company</h4>
+            <ul className="space-y-3 text-sm font-inter text-promaroc-white/60">
+              <li><Link href="/projects" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-block">Our Portfolio</Link></li>
+              <li><Link href="/about" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-block">About Us</Link></li>
+              <li><Link href="/login" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-block">Client Portal</Link></li>
             </ul>
           </div>
 
           {/* Support */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-white">Support</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Help Center</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Community</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Status</Link></li>
+            <h4 className="font-sora font-semibold text-lg text-promaroc-white">Connect</h4>
+            <ul className="space-y-3 text-sm font-inter text-promaroc-white/60">
+              <li><Link href="/contact" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-block">Contact Us</Link></li>
+              <li><a href="https://wa.me/212000000000" target="_blank" rel="noreferrer" className="hover:text-promaroc-white hover:translate-x-1 transition-all inline-block">WhatsApp Chat</a></li>
             </ul>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-slate-800 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center text-sm text-slate-400">
+        <div className="border-t border-white/10 pt-8 mt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center text-sm font-inter text-promaroc-white/40">
             <p>&copy; {currentYear} Promaroc Property Management. All rights reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="/" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link href="/" className="hover:text-white transition-colors">Terms of Service</Link>
-              <Link href="/" className="hover:text-white transition-colors">Cookie Policy</Link>
+              <Link href="/privacy" className="hover:text-promaroc-white transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-promaroc-white transition-colors">Terms of Service</Link>
             </div>
           </div>
         </div>

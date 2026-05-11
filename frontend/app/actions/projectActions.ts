@@ -30,6 +30,10 @@ export async function createProject(formData: FormData) {
   let heroImageUrl = null;
 
   if (imageFile && imageFile.size > 0) {
+    // Validate file type and size (e.g., max 5MB)
+    if (!imageFile.type.startsWith('image/')) throw new Error("Hero image must be an image file.");
+    if (imageFile.size > 5 * 1024 * 1024) throw new Error("Hero image must be less than 5MB.");
+
     // Convert the image into a format Node.js can stream
     const buffer = Buffer.from(await imageFile.arrayBuffer());
     
@@ -64,6 +68,10 @@ export async function createProject(formData: FormData) {
   if (validGalleryFiles.length > 0) {
     // Upload all images to Cloudflare R2 at the exact same time
     const uploadPromises = validGalleryFiles.map(async (file) => {
+      // Validate gallery files
+      if (!file.type.startsWith('image/')) throw new Error(`File ${file.name} is not an image.`);
+      if (file.size > 5 * 1024 * 1024) throw new Error(`File ${file.name} exceeds 5MB limit.`);
+
       const buffer = Buffer.from(await file.arrayBuffer());
       const uniqueFileName = `gallery-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
       

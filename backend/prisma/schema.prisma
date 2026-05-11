@@ -59,6 +59,9 @@ model PortfolioProject {
   // Relationships
   metrics         ProjectMetric[] // One-to-Many relation: A project can have multiple bento box metrics
 
+  propertyId      String?   @unique
+  property        Property? @relation(fields: [propertyId], references: [id])
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -83,9 +86,128 @@ model ProjectMetric {
 // ==========================================
 
 enum Role {
-  USER
-  ADMIN
+  USER     // A standard guest looking to book
+  HOST     // A user who has active property listings
+  ADMIN    // You
 }
+
+enum PropertyType {
+  APARTMENT
+  VILLA
+  RIAD
+  BOUTIQUE_HOTEL
+  GUEST_HOUSE
+  STUDIO
+}
+
+enum PropertyStatus {
+  PENDING    // Waiting for Admin approval
+  APPROVED   // Live on the marketplace
+  REJECTED   // Denied by Admin
+}
+
+enum BookingStatus {
+  PENDING     // Waiting for host approval or payment
+  CONFIRMED   // Payment secured, dates locked
+  CANCELLED   // Cancelled by host or guest
+  COMPLETED   // Stay has finished
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+
+// ==========================================
+// 3. THE PROPERTY MODEL (Listings)
+// ==========================================
+
+model Property {
+  id                  String   @id @default(cuid())
+  title               String
+  description         String   @db.Text
+  propertyType        PropertyType @default(APARTMENT)
+  
+  // Location
+  location            String   // e.g., "Marrakech Medina"
+  address             String?  // Full physical address
+  city                String?
+  country             String?  @default("Morocco")
+  latitude            Float?   // For Google Maps integration later
+  longitude           Float?
+
+  // Details & Specs (Inspired by your PDF)
+  pricePerNight       Float
+  bedrooms            Int
+  bathrooms           Int
+  maxGuests           Int
+  sizeSqm             Float?   // e.g., 236 sqm
+  buildYear           Int?     // e.g., 2021
+  
+  // Array of strings: ["Pool", "WiFi", "24/7 Security", "Indoor Games"]
+  amenities           String[] 
+
+  // Media
+  heroImage           String?
+  galleryImages       String[]
+  videoUrl            String?  // From PDF "Preview Video" section
+  
+  // Admin & System Flags
+  status              PropertyStatus @default(APPROVED) 
+  isManagedByPromaroc Boolean        @default(false) // Promaroc "Premium" Badge
+  isBookable          Boolean        @default(true)   // Toggle to pause bookings
+
+  // 🔗 Relationships
+  ownerId             String
+  owner               User           @relation("UserProperties", fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  bookings            Booking[]
+  portfolioProject    PortfolioProject? // Link back to the marketing Case Study
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// ==========================================
+// 4. THE BOOKING ENGINE
+// ==========================================
+
+model Booking {
+  id              String   @id @default(cuid())
+  
+  // 🔗 The Property
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  // 🔗 The Guest
+  guestId         String
+  guest           User     @relation("UserBookings", fields: [guestId], references: [id], onDelete: Cascade)
+
+  // 📅 Dates & Capacity
+  checkIn         DateTime
+  checkOut        DateTime
+  guestsCount     Int
+
+  // 💰 Financials (Snapshot at time of booking)
+  // We lock these in case the host changes the price later!
+  pricePerNight   Float    
+  cleaningFee     Float?   @default(0)
+  serviceFee      Float?   @default(0)
+  totalPrice      Float
+  
+  paymentStatus   PaymentStatus @default(UNPAID)
+
+  // 📋 Status & Notes
+  status          BookingStatus @default(PENDING)
+  specialRequests String?       @db.Text // E.g., "Need a baby crib"
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+
 
 model User {
   id            String    @id @default(cuid())
@@ -101,6 +223,8 @@ model User {
   sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  properties      Property[] @relation("UserProperties") // Properties they own
+  bookings        Booking[]  @relation("UserBookings")   // Trips they have booked
 }
 
 model Account {

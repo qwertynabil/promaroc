@@ -8,13 +8,9 @@ import HomeContactCTA from '@/components/sections/HomeContactCTA';
 export default function Home() {
   return (
     <div className="flex flex-col w-full">
-      {/* 1. Cinematic Entry */}
       <HeroSection />    
-      {/* 2. Social Proof / Platforms */}
-      <TrustBar />      
-      {/* 3. Core Philosophy (Transition to White background) */}
+      <TrustBar />
       <ValuePropSection />
-      {/* 4. Next up: The Services Bento Grid! */}
       <ServicesBentoGrid />
       <FeaturedProjects />
       <HomeContactCTA />

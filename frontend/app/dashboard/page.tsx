@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
-export default async function ClientDashboardPage() {
+export default async function DashboardController() {
   const session = await auth();
 
   // 1. Tell TypeScript: If there is no session OR no user inside it, kick them out
@@ -9,20 +9,19 @@ export default async function ClientDashboardPage() {
     redirect("/login");
   }
 
-  // 2. TypeScript now knows `session.user` is 100% safe to use below!
-  if (session.user.role === "ADMIN") {
+  // 2. Get the user's role
+  const role = session.user.role;
+
+  // 3. Admins go straight to the Command Center
+  if (role === "ADMIN") {
     redirect("/admin");
   }
 
-  // 3. Client Dashboard
-  return (
-    <div className="p-10 text-promaroc-black dark:text-promaroc-white">
-      <h1 className="text-3xl font-sora font-bold mb-4">
-        Welcome back, {session.user.name || 'Client'}
-      </h1>
-      <p className="text-black/60 dark:text-promaroc-white/60">
-        Your property performance metrics will appear here.
-      </p>
-    </div>
-  );
+  // 4. Hosts go to their Property Management view
+  if (role === "HOST") {
+    redirect("/dashboard/hosting");
+  }
+
+  // 5. Normal Users (Guests) go to their Trips/Bookings view
+  redirect("/dashboard/trips");
 }

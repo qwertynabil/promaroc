@@ -2,7 +2,7 @@
 
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
 
 export default function HeroSection() {
@@ -89,21 +89,6 @@ export default function HeroSection() {
 
         </motion.div>
       </div>
-
-      {/* Scroll Down Indicator */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-promaroc-white/50"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-        >
-          <ChevronDown className="w-5 h-5" />
-        </motion.div>
-      </motion.div>
 
     </section>
   );

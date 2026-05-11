@@ -6,9 +6,10 @@ export default async function AdminDashboardPage() {
   const session = await auth();
 
   // Fetch actual data counts from the database in parallel for performance
-  const [totalProjects, newLeads] = await Promise.all([
+  const [totalProjects, newLeads, activeClients] = await Promise.all([
     prisma.portfolioProject.count(),
-    prisma.contactMessage.count({ where: { isRead: false } })
+    prisma.contactMessage.count({ where: { isRead: false } }),
+    prisma.user.count({ where: { role: 'USER' } })
   ]);
 
   return (
@@ -45,7 +46,7 @@ export default async function AdminDashboardPage() {
           <div className="relative z-10">
             <div className="text-black/50 dark:text-white/50 text-sm font-medium mb-3">Active Clients</div>
             <div className="flex items-end gap-3">
-              <div className="text-4xl font-bold font-sora tracking-tight">8</div>
+              <div className="text-4xl font-bold font-sora tracking-tight">{activeClients}</div>
             </div>
           </div>
         </div>

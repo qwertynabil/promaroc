@@ -104,6 +104,11 @@ export default function Header() {
             </div>
           </div>
 
+          {/* NEW: Stays (Properties Directory) Link */}
+          <Link href="/properties" className="font-medium text-sm text-promaroc-white/90 hover:text-promaroc-white transition-colors">
+            Stays
+          </Link>
+
           <Link href="/projects" className="font-medium text-sm text-promaroc-white/90 hover:text-promaroc-white transition-colors">
             Projects
           </Link>
@@ -151,6 +156,8 @@ export default function Header() {
       }`}>
         <nav className="flex flex-col gap-6 text-2xl font-sora font-semibold text-promaroc-white">
           <Link href="/services" onClick={() => setMobileMenuOpen(false)}>Services</Link>
+          {/* NEW: Stays Link for Mobile */}
+          <Link href="/properties" onClick={() => setMobileMenuOpen(false)}>Stays</Link>
           <Link href="/projects" onClick={() => setMobileMenuOpen(false)}>Projects</Link>
           <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
           <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>

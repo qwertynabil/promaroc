@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Mail, KeyRound, ChevronLeft, User, Phone, Globe, Lock } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [step, setStep] = useState<1 | 2>(1);
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '', password: '', name: '', phone: '', country: ''
   });
@@ -20,6 +22,7 @@ export default function LoginPage() {
 
   const updateForm = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (error) setError(''); // Automatically clear errors when the user starts typing again
   };
 
   // Handle Login (Instant) OR Request Signup Code
@@ -38,7 +41,10 @@ export default function LoginPage() {
         });
 
         if (res?.error) setError(res.error);
-        else window.location.href = '/dashboard';
+        else {
+          router.refresh(); // Tells Next.js Server Components to re-fetch the session
+          router.push('/dashboard'); // Fast client-side navigation
+        }
 
       } else {
         // SIGNUP: SEND OTP TO VERIFY EMAIL FIRST
@@ -73,7 +79,10 @@ export default function LoginPage() {
       });
 
       if (res?.error) setError("Invalid or expired code.");
-      else window.location.href = '/dashboard';
+      else {
+        router.refresh();
+        router.push('/dashboard');
+      }
     } catch (err) {
       setError("An unexpected error occurred.");
     } finally {
@@ -128,30 +137,30 @@ export default function LoginPage() {
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-5 overflow-hidden">
                       <div className="relative group">
                         <User className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-black/40 dark:text-white/40 group-focus-within:text-promaroc-green dark:group-focus-within:text-promaroc-white transition-colors" />
-                        <input required type="text" value={formData.name} onChange={(e) => updateForm('name', e.target.value)} placeholder="Full Name" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium" />
+                        <input required disabled={isLoading} type="text" value={formData.name} onChange={(e) => updateForm('name', e.target.value)} placeholder="Full Name" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium disabled:opacity-50" />
                       </div>
                       <div className="relative group">
                         <Phone className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-black/40 dark:text-white/40 group-focus-within:text-promaroc-green dark:group-focus-within:text-promaroc-white transition-colors" />
-                        <input required type="tel" value={formData.phone} onChange={(e) => updateForm('phone', e.target.value)} placeholder="Phone Number" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium" />
+                        <input required disabled={isLoading} type="tel" value={formData.phone} onChange={(e) => updateForm('phone', e.target.value)} placeholder="Phone Number" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium disabled:opacity-50" />
                       </div>
                       <div className="relative group">
                         <Globe className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-black/40 dark:text-white/40 group-focus-within:text-promaroc-green dark:group-focus-within:text-promaroc-white transition-colors" />
-                        <input required type="text" value={formData.country} onChange={(e) => updateForm('country', e.target.value)} placeholder="Country" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium" />
+                        <input required disabled={isLoading} type="text" value={formData.country} onChange={(e) => updateForm('country', e.target.value)} placeholder="Country" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium disabled:opacity-50" />
                       </div>
                     </motion.div>
                   )}
 
                   <div className="relative group">
                     <Mail className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-black/40 dark:text-white/40 group-focus-within:text-promaroc-green dark:group-focus-within:text-promaroc-white transition-colors" />
-                    <input required type="email" value={formData.email} onChange={(e) => updateForm('email', e.target.value)} placeholder="Email Address" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium" />
+                    <input required disabled={isLoading} type="email" value={formData.email} onChange={(e) => updateForm('email', e.target.value)} placeholder="Email Address" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium disabled:opacity-50" />
                   </div>
                   <div className="relative group">
                     <Lock className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-black/40 dark:text-white/40 group-focus-within:text-promaroc-green dark:group-focus-within:text-promaroc-white transition-colors" />
-                    <input required type="password" value={formData.password} onChange={(e) => updateForm('password', e.target.value)} placeholder="Password" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium" />
+                    <input required disabled={isLoading} minLength={6} type="password" value={formData.password} onChange={(e) => updateForm('password', e.target.value)} placeholder="Password" className="w-full pl-12 pr-5 py-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-1 focus:ring-promaroc-green dark:focus:ring-white outline-none transition-all placeholder:text-black/40 dark:placeholder:text-white/40 font-medium disabled:opacity-50" />
                   </div>
 
                   <button type="submit" disabled={isLoading} className="w-full mt-4 bg-promaroc-green text-promaroc-white hover:bg-[#0a2e29] dark:bg-promaroc-white dark:text-promaroc-black py-4 rounded-xl font-bold dark:hover:bg-white/80 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-promaroc-green/20 dark:shadow-white/10">
-                    {isLoading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Verify Email')}
+                    {isLoading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Continue')}
                     {!isLoading && <ArrowRight className="w-4 h-4 ml-1" />}
                   </button>
                 </form>
@@ -167,7 +176,7 @@ export default function LoginPage() {
                 {error && <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-center justify-center font-medium">{error}</motion.div>}
 
                 <form onSubmit={handleVerifySignupCode} className="space-y-6">
-                  <input type="text" required maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} className="w-full text-center text-3xl tracking-[0.75em] px-5 py-5 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-2 focus:ring-promaroc-green/50 dark:focus:ring-white/50 outline-none transition-all font-bold placeholder:text-black/20 dark:placeholder:text-white/20" placeholder="------" />
+                  <input type="text" disabled={isLoading} required maxLength={6} value={code} onChange={(e) => { setCode(e.target.value.replace(/\D/g, '')); if (error) setError(''); }} className="w-full text-center text-3xl tracking-[0.75em] px-5 py-5 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-promaroc-black dark:text-promaroc-white focus:border-promaroc-green dark:focus:border-promaroc-white focus:ring-2 focus:ring-promaroc-green/50 dark:focus:ring-white/50 outline-none transition-all font-bold placeholder:text-black/20 dark:placeholder:text-white/20 disabled:opacity-50" placeholder="------" />
                   <button type="submit" disabled={isLoading || code.length < 6} className="w-full bg-promaroc-green text-promaroc-white hover:bg-[#0a2e29] dark:bg-promaroc-white dark:text-promaroc-black py-4 rounded-xl font-bold dark:hover:bg-white/80 transition-all duration-300 shadow-lg shadow-promaroc-green/20 dark:shadow-white/10 disabled:opacity-50">
                     Complete Sign Up
                   </button>

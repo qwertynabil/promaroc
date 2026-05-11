@@ -10,7 +10,7 @@ import {
   ArrowRight, 
   CheckCircle2 
 } from 'lucide-react';
-
+import { Variant } from 'framer-motion';
 const SERVICES = [
   {
     id: 'digital',
@@ -60,7 +60,11 @@ export default function ServicesBentoGrid() {
   };
 
   return (
-    <section className="bg-black/5 dark:bg-black py-32 relative transition-colors duration-300">
+    <section className="bg-promaroc-white dark:bg-promaroc-black py-32 relative overflow-hidden transition-colors duration-300">
+      {/* Cinematic Ambient Glows */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-promaroc-green/5 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-promaroc-orange/5 dark:bg-promaroc-green/5 rounded-full blur-[100px] pointer-events-none" />
+
       <div className="container mx-auto px-6 max-w-6xl">
         
         {/* Section Header */}
@@ -97,25 +101,25 @@ export default function ServicesBentoGrid() {
             <motion.div 
               key={service.id}
               variants={cardVariants}
-              className={`group relative bg-promaroc-white rounded-3xl p-8 md:p-10 border border-promaroc-light shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col justify-between ${service.className}`}
+              className={`group relative bg-white/60 dark:bg-white/5 backdrop-blur-2xl rounded-3xl p-8 md:p-10 border border-black/5 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 overflow-hidden flex flex-col justify-between ${service.className}`}
             >
               <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-promaroc-green/10 flex items-center justify-center text-promaroc-green mb-8 group-hover:scale-110 transition-transform duration-500">
-                  <service.icon className="w-7 h-7" />
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-promaroc-green/10 to-transparent dark:from-white/10 dark:to-transparent border border-promaroc-green/10 dark:border-white/5 flex items-center justify-center text-promaroc-green dark:text-white mb-8 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-inner">
+                  <service.icon className="w-8 h-8" />
                 </div>
                 
-                <h3 className="text-2xl font-sora font-bold text-promaroc-black mb-4">
+                <h3 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-4">
                   {service.title}
                 </h3>
                 
-                <p className="text-promaroc-dark/70 font-inter mb-8 line-clamp-2 md:line-clamp-none">
+                <p className="text-black/70 dark:text-white/70 font-inter mb-8 line-clamp-2 md:line-clamp-none">
                   {service.description}
                 </p>
 
-                <ul className="space-y-3 mb-10">
+                <ul className="space-y-4 mb-10">
                   {service.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-promaroc-black dark:text-promaroc-white font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-promaroc-orange dark:text-white" />
+                  <li key={i} className="flex items-center gap-3 text-sm text-promaroc-black dark:text-promaroc-white font-medium group/item">
+                    <CheckCircle2 className="w-5 h-5 text-promaroc-green dark:text-white group-hover/item:scale-110 transition-transform" />
                       {feature}
                     </li>
                   ))}
@@ -124,14 +128,14 @@ export default function ServicesBentoGrid() {
 
               <Link 
                 href={service.href}
-              className="inline-flex items-center gap-2 font-semibold text-sm text-promaroc-black dark:text-promaroc-white group-hover:text-black/60 dark:group-hover:text-white/60 transition-colors z-10 w-fit"
+              className="inline-flex items-center gap-2 font-bold text-sm text-promaroc-black dark:text-promaroc-white group-hover:text-promaroc-green dark:group-hover:text-white/80 transition-colors z-10 w-fit mt-auto"
               >
                 Explore this service
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
               </Link>
 
               {/* Decorative subtle background element that appears on hover */}
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-black/5 rounded-full blur-3xl group-hover:bg-black/10 dark:bg-white/5 dark:group-hover:bg-white/10 transition-colors duration-500 pointer-events-none" />
+            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-promaroc-green/5 dark:bg-white/5 rounded-full blur-3xl group-hover:bg-promaroc-green/20 dark:group-hover:bg-white/10 group-hover:scale-150 transition-all duration-700 pointer-events-none" />
             </motion.div>
           ))}
         </motion.div>

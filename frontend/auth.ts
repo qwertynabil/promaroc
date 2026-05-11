@@ -46,23 +46,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Invalid or expired code");
           }
 
-          // 2. Delete used token
-          await prisma.verificationToken.delete({
-            where: { identifier_token: { identifier: email, token: code } },
-          });
-
-          // 3. Hash Password & Create User
+          // 2 & 3. Hash Password, Delete Token, & Create User in a Transaction
           if (!user) {
             const hashedPassword = await bcrypt.hash(password, 10);
-            user = await prisma.user.create({
-              data: {
-                email,
-                password: hashedPassword,
-                name: credentials.name as string,
-                phone: credentials.phone as string,
-                country: credentials.country as string,
-                role: "USER"
-              },
+            user = await prisma.$transaction(async (tx) => {
+              await tx.verificationToken.delete({
+                where: { identifier_token: { identifier: email, token: code } },
+              });
+              
+              return tx.user.create({
+                data: {
+                  email,
+                  password: hashedPassword,
+                  name: credentials.name as string,
+                  phone: credentials.phone as string,
+                  country: credentials.country as string,
+                  role: "USER"
+                },
+              });
+            });
+          } else {
+            // If somehow the user already exists during a signup flow, just consume the token
+            await prisma.verificationToken.delete({
+              where: { identifier_token: { identifier: email, token: code } },
             });
           }
           return user;

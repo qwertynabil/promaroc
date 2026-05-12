@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Building, FolderKanban, Inbox, LayoutDashboard, Users, Menu, X } from 'lucide-react';
+import { Building, FolderKanban, Inbox, LayoutDashboard, Users, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function AdminNavigation({ bottomActions }: { bottomActions: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
 
   // Close the mobile menu automatically when the user navigates
   useEffect(() => {
@@ -41,28 +42,36 @@ export default function AdminNavigation({ bottomActions }: { bottomActions: Reac
       )}
 
       {/* Sidebar Container */}
-      <aside className={`
+      <aside data-collapsed={isDesktopCollapsed} className={`group/sidebar
         fixed md:sticky top-0 md:top-16 left-0 z-[50] h-screen md:h-[calc(100vh-4rem)]
-        w-64 bg-white dark:bg-[#0a0a0a] md:bg-white/50 md:dark:bg-white/5 
+        shrink-0 ${isDesktopCollapsed ? 'w-64 md:w-20' : 'w-64 md:w-64'} bg-white dark:bg-[#0a0a0a] md:bg-white/50 md:dark:bg-white/5 
         backdrop-blur-2xl border-r border-black/5 dark:border-white/10 
-        flex flex-col transition-transform duration-300
+        flex flex-col transition-all duration-300 ease-in-out overflow-x-hidden
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <nav className="flex-1 px-4 pt-6 space-y-1.5 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
           {links.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href + '/'));
+            const Icon = link.icon;
             return (
               <Link 
                 key={link.href} 
                 href={link.href} 
-                className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all ${
+                className={`flex items-center text-sm font-bold rounded-2xl transition-all duration-300 group py-3 px-3 justify-start ${
+                  isDesktopCollapsed ? 'md:justify-center md:px-0' : ''
+                } ${
                   isActive 
                     ? 'text-promaroc-black dark:text-promaroc-white bg-black/5 dark:bg-white/10 shadow-sm border border-black/5 dark:border-white/5' 
                     : 'text-black/60 dark:text-white/60 hover:text-promaroc-black dark:hover:text-promaroc-white hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
+                title={isDesktopCollapsed ? link.label : undefined}
               >
-                <link.icon className={`w-4 h-4 ${isActive ? 'text-promaroc-green dark:text-promaroc-white' : ''}`} />
-                {link.label}
+                <Icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-promaroc-green dark:text-promaroc-white' : 'text-black/40 dark:text-white/40 group-hover:text-promaroc-green dark:group-hover:text-promaroc-white'}`} />
+                <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+                  isDesktopCollapsed ? 'md:max-w-0 md:opacity-0 md:ml-0' : 'max-w-[200px] opacity-100 ml-3'
+                }`}>
+                  {link.label}
+                </span>
               </Link>
             );
           })}
@@ -70,7 +79,23 @@ export default function AdminNavigation({ bottomActions }: { bottomActions: Reac
 
         {/* Bottom Actions Slot (Allows Server Actions to be passed in) */}
         <div className="p-4 mt-auto border-t border-black/5 dark:border-white/10">
-          {bottomActions}
+          <div className="flex flex-col gap-1.5 whitespace-nowrap">
+            {bottomActions}
+            <button
+                onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
+                className={`hidden md:flex items-center w-full py-3 px-3 justify-start text-sm font-bold rounded-2xl transition-all duration-300 group text-black/60 dark:text-white/60 hover:text-promaroc-black dark:hover:text-promaroc-white hover:bg-black/5 dark:hover:bg-white/5 ${
+                    isDesktopCollapsed ? 'md:justify-center md:px-0' : ''
+                }`}
+                title={isDesktopCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+                <ChevronLeft className={`w-5 h-5 shrink-0 transition-transform duration-300 ${isDesktopCollapsed ? 'rotate-180' : 'rotate-0'}`} />
+                <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+                  isDesktopCollapsed ? 'md:max-w-0 md:opacity-0 md:ml-0' : 'max-w-[200px] opacity-100 ml-3'
+                }`}>
+                  Collapse
+                </span>
+            </button>
+          </div>
         </div>
       </aside>
     </>

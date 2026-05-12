@@ -30,10 +30,10 @@ export async function createProperty(formData: FormData) {
   const description = formData.get('description') as string;
   const location = formData.get('location') as string;
   const address = formData.get('address') as string;
-  const pricePerNight = parseFloat(formData.get('pricePerNight') as string);
-  const bedrooms = parseInt(formData.get('bedrooms') as string);
-  const bathrooms = parseInt(formData.get('bathrooms') as string);
-  const maxGuests = parseInt(formData.get('maxGuests') as string);
+  const pricePerNight = parseFloat(formData.get('pricePerNight') as string) || 0;
+  const bedrooms = parseInt(formData.get('bedrooms') as string) || 1;
+  const bathrooms = parseInt(formData.get('bathrooms') as string) || 1;
+  const maxGuests = parseInt(formData.get('maxGuests') as string) || 1;
   
   // --- NEW FIELDS ---
   const propertyType = formData.get('propertyType') as any; // Cast to Prisma Enum
@@ -44,6 +44,9 @@ export async function createProperty(formData: FormData) {
   const videoUrl = formData.get('videoUrl') as string || null;
   // ------------------
 
+  // Sanity Check: Prevent saving properties with negative or 0 prices
+  if (pricePerNight <= 0) throw new Error("Price per night must be greater than 0.");
+
   const amenitiesString = formData.get('amenities') as string;
   const amenities = amenitiesString.split(',').map(item => item.trim()).filter(Boolean);
 
@@ -52,7 +55,8 @@ export async function createProperty(formData: FormData) {
   let heroImageUrl = null;
   if (heroFile && heroFile.size > 0) {
     const buffer = Buffer.from(await heroFile.arrayBuffer());
-    const uniqueFileName = `prop-hero-${Date.now()}-${heroFile.name.replace(/\s+/g, '-')}`;
+    const safeName = heroFile.name.replace(/[^a-zA-Z0-9.-]/g, '-');
+    const uniqueFileName = `prop-hero-${Date.now()}-${safeName}`;
     await s3Client.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME,
       Key: uniqueFileName,
@@ -70,7 +74,8 @@ export async function createProperty(formData: FormData) {
   if (validGalleryFiles.length > 0) {
     const uploadPromises = validGalleryFiles.map(async (file) => {
       const buffer = Buffer.from(await file.arrayBuffer());
-      const uniqueFileName = `prop-gal-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '-');
+      const uniqueFileName = `prop-gal-${Date.now()}-${safeName}`;
       await s3Client.send(new PutObjectCommand({
         Bucket: process.env.R2_BUCKET_NAME,
         Key: uniqueFileName,

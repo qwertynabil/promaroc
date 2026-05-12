@@ -11,7 +11,8 @@ export default async function GuestTripsPage() {
   // 1. Fetch all bookings for this user, including the property details!
   const allBookings = await prisma.booking.findMany({
     where: { 
-      guestId: session.user.id 
+      guestId: session.user.id,
+      status: { not: "CANCELLED" }
     },
     include: {
       property: true // This grabs the image, title, and location

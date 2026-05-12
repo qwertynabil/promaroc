@@ -7,6 +7,7 @@ import {
   CheckCircle2, Share, Heart, ChevronRight, PlayCircle 
 } from "lucide-react";
 import BookingWidget from "./BookingWidget";
+import SaveButton from "@/components/ui/SaveButton";
 
 export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,7 +25,13 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
   const isApproved = property.status === "APPROVED";
   const isAdmin = session?.user?.role === "ADMIN";
   const isOwner = session?.user?.id === property.ownerId;
-
+// Check if the current user has saved this property
+  const savedRecord = session?.user?.id ? await prisma.savedProperty.findUnique({
+    where: {
+      userId_propertyId: { userId: session.user.id, propertyId: property.id }
+    }
+  }) : null;
+  const isInitiallySaved = !!savedRecord;
   // If it's not approved, AND you aren't the Admin, AND you aren't the Owner... kick them out!
   if (!isApproved && !isAdmin && !isOwner) {
     notFound();
@@ -58,10 +65,11 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
             <button className="flex items-center gap-2 text-sm font-semibold text-black/70 dark:text-white/70 hover:text-promaroc-green transition-colors">
               <Share className="w-4 h-4" /> Share
             </button>
-            <button className="flex items-center gap-2 text-sm font-semibold text-black/70 dark:text-white/70 hover:text-red-500 transition-colors">
-              <Heart className="w-4 h-4" /> Save
-            </button>
-          </div>
+<SaveButton 
+              propertyId={property.id} 
+              initiallySaved={isInitiallySaved} 
+              isLoggedIn={!!session?.user?.id} 
+            />          </div>
         </div>
 
         {/* Title Section */}

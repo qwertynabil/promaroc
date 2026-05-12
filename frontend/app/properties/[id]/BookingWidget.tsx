@@ -33,8 +33,10 @@ export default function BookingWidget({ propertyId, pricePerNight, maxGuests }: 
   const serviceFee = nights > 0 ? Math.round(nightlyTotal * 0.10) : 0;
   const grandTotal = nightlyTotal + cleaningFee + serviceFee;
 
-  // Get today's date in YYYY-MM-DD format for input restrictions
-  const today = new Date().toISOString().split('T')[0];
+  // Get today's date in local YYYY-MM-DD format to prevent UTC time-travel bugs
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  const today = new Date(now.getTime() - offset).toISOString().split('T')[0];
 
   const handleSubmit = async (formData: FormData) => {
     if (nights <= 0) {
@@ -80,7 +82,6 @@ export default function BookingWidget({ propertyId, pricePerNight, maxGuests }: 
       <form action={handleSubmit}>
         {/* Hidden inputs to pass data to Server Action */}
         <input type="hidden" name="propertyId" value={propertyId} />
-        <input type="hidden" name="pricePerNight" value={pricePerNight} />
 
         {/* Inputs */}
         <div className="border border-black/10 dark:border-white/10 rounded-2xl mb-6 overflow-hidden bg-black/5 dark:bg-white/5">
@@ -165,6 +166,18 @@ export default function BookingWidget({ propertyId, pricePerNight, maxGuests }: 
         >
           <span className="relative z-10">{isLoading ? 'Securing Dates...' : 'Reserve Now'}</span>
           <div className={`absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 ease-out ${isHovered ? 'translate-y-0' : ''}`} />
+        </button>
+
+        {/* NEW: Contact Host Button */}
+        <button 
+          type="button"
+          onClick={() => {
+            // Directs the user to the inbox and passes the property ID so we know what they are asking about!
+            router.push(`/dashboard/messages?new_chat=${propertyId}`);
+          }}
+          className="w-full mt-3 bg-transparent border-2 border-black/10 dark:border-white/10 text-promaroc-black dark:text-promaroc-white py-3.5 rounded-xl font-bold text-base hover:border-promaroc-green dark:hover:border-promaroc-green hover:text-promaroc-green transition-all duration-300"
+        >
+          Contact Host
         </button>
       </form>
 

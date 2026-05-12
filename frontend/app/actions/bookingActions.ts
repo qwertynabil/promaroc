@@ -18,10 +18,27 @@ export async function createBooking(formData: FormData) {
   const checkIn = new Date(formData.get('checkIn') as string);
   const checkOut = new Date(formData.get('checkOut') as string);
   const guestsCount = parseInt(formData.get('guestsCount') as string);
-  const pricePerNight = parseFloat(formData.get('pricePerNight') as string);
 
-  // 3. Server-Side Math (Never trust the client!)
-  const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
+  // Defense in depth: Check for NaN dates or malicious negative guest requests
+  if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) throw new Error("Invalid dates provided.");
+  if (guestsCount < 1) throw new Error("At least one guest is required.");
+
+  // 3. Security Check: Never trust client pricing! Fetch the real price from DB.
+  const property = await prisma.property.findUnique({ where: { id: propertyId } });
+  if (!property) throw new Error("Property not found.");
+  if (property.ownerId === session.user.id) throw new Error("You cannot book your own property.");
+  
+  if (guestsCount > property.maxGuests) throw new Error(`This property only allows up to ${property.maxGuests} guests.`);
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (checkIn < today) throw new Error("Check-in date cannot be in the past.");
+  
+  const pricePerNight = property.pricePerNight;
+
+  // 4. Server-Side Math
+  // CRITICAL: Do not use Math.abs(). If checkOut is before checkIn, diffTime MUST be negative!
+  const diffTime = checkOut.getTime() - checkIn.getTime();
   const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (nights <= 0) throw new Error("Check-out must be after check-in.");
@@ -30,7 +47,7 @@ export async function createBooking(formData: FormData) {
   const serviceFee = Math.round((nights * pricePerNight) * 0.10); // 10% Promaroc Fee
   const totalPrice = (nights * pricePerNight) + cleaningFee + serviceFee;
 
-  // 4. Double-Booking Protection (Check if dates overlap in DB)
+  // 5. Double-Booking Protection (Check if dates overlap in DB)
   const existingBooking = await prisma.booking.findFirst({
     where: {
       propertyId,
@@ -46,7 +63,7 @@ export async function createBooking(formData: FormData) {
     throw new Error("These dates are already booked by someone else.");
   }
 
-  // 5. Create the Booking
+  // 6. Create the Booking
   try {
     await prisma.booking.create({
       data: {
@@ -68,7 +85,7 @@ export async function createBooking(formData: FormData) {
     throw new Error("Failed to process booking.");
   }
 
-  // 6. Redirect Guest to their Trips Dashboard
+  // 7. Redirect Guest to their Trips Dashboard
   revalidatePath('/dashboard/trips');
   redirect('/dashboard/trips');
 }
@@ -103,4 +120,5 @@ export async function updateBookingStatus(bookingId: string, newStatus: "CONFIRM
 
   revalidatePath('/dashboard/hosting/bookings');
   revalidatePath('/dashboard/hosting');
+  revalidatePath('/dashboard/trips'); // Ensure the Guest sees the status update instantly
 }

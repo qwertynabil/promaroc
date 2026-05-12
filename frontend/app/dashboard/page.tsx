@@ -1,27 +1,24 @@
 import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export default async function DashboardController() {
   const session = await auth();
+  if (!session || !session.user?.id) redirect("/login");
 
-  // 1. Tell TypeScript: If there is no session OR no user inside it, kick them out
-  if (!session || !session.user) {
-    redirect("/login");
-  }
+  // Fetch the real-time role from the DB
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true }
+  });
 
-  // 2. Get the user's role
-  const role = session.user.role;
+  if (!dbUser) redirect("/login");
 
-  // 3. Admins go straight to the Command Center
-  if (role === "ADMIN") {
-    redirect("/admin");
-  }
+  const role = dbUser.role;
 
-  // 4. Hosts go to their Property Management view
-  if (role === "HOST") {
-    redirect("/dashboard/hosting");
-  }
-
-  // 5. Normal Users (Guests) go to their Trips/Bookings view
+  // Teleport to the correct view!
+  if (role === "ADMIN") redirect("/admin");
+  if (role === "HOST") redirect("/dashboard/hosting");
+  
   redirect("/dashboard/trips");
 }

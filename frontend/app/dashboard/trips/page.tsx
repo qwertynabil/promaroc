@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { MapPin, CalendarDays, Receipt, Plane } from "lucide-react";
-import { UpgradeButton } from "./UpgradeButton"; // Your existing button!
 
 export default async function GuestTripsPage() {
   const session = await auth();
@@ -45,9 +44,6 @@ export default async function GuestTripsPage() {
             Welcome back, {session.user.name?.split(' ')[0] || 'Guest'}. Here are your upcoming stays.
           </p>
         </div>
-        
-        {/* The Upgrade Button you built earlier! */}
-        <UpgradeButton />
       </div>
 
       {/* UPCOMING TRIPS SECTION */}

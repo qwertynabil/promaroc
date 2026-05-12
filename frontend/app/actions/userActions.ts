@@ -1,35 +1,34 @@
 'use server';
 
-import { auth, signOut } from "@/auth";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-export async function switchToHost() {
-  const currentSession = await auth();
-  if (!currentSession?.user?.id) return;
+export async function toggleRole() {
+  const session = await auth();
+  if (!session?.user?.id) return;
 
-  // Protect Admins: Don't accidentally change an Admin's role!
-  if (currentSession.user.role === "ADMIN") return;
+  // Admins shouldn't be toggling, they have the Command Center
+  if (session.user.role === "ADMIN") return;
 
-  // 1. Update their role in the database
-  await prisma.user.update({
-    where: { id: currentSession.user.id },
-    data: { role: "HOST" }
+  // 1. Fetch current role directly from DB to prevent cookie staleness
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true }
   });
 
-  // 2. Sign them out to refresh the JWT with their new session role
-  await signOut({ redirectTo: "/login" });
-}
+  if (!dbUser) return;
 
-export async function switchToGuest() {
-  const currentSession = await auth();
-  if (!currentSession?.user?.id) return;
-
-  if (currentSession.user.role === "ADMIN") return;
+  // 2. Flip the role
+  const newRole = dbUser.role === "HOST" ? "USER" : "HOST";
 
   await prisma.user.update({
-    where: { id: currentSession.user.id },
-    data: { role: "USER" }
+    where: { id: session.user.id },
+    data: { role: newRole }
   });
 
-  await signOut({ redirectTo: "/login" });
+  // 3. Clear the layout cache and teleport them to the router!
+  revalidatePath('/dashboard', 'layout');
+  redirect('/dashboard');
 }

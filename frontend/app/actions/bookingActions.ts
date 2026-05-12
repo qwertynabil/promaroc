@@ -72,3 +72,35 @@ export async function createBooking(formData: FormData) {
   revalidatePath('/dashboard/trips');
   redirect('/dashboard/trips');
 }
+
+// Add this to the bottom of frontend/app/actions/bookingActions.ts
+
+export async function updateBookingStatus(bookingId: string, newStatus: "CONFIRMED" | "CANCELLED") {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  // Verify the booking exists and the logged-in user actually owns the property
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: { property: true }
+  });
+
+  if (!booking) throw new Error("Booking not found");
+  
+  if (booking.property.ownerId !== session.user.id && session.user.role !== "ADMIN") {
+    throw new Error("Forbidden: You do not own this property.");
+  }
+
+  try {
+    await prisma.booking.update({
+      where: { id: bookingId },
+      data: { status: newStatus },
+    });
+  } catch (error) {
+    console.error("Failed to update booking:", error);
+    throw new Error("Failed to update booking status.");
+  }
+
+  revalidatePath('/dashboard/hosting/bookings');
+  revalidatePath('/dashboard/hosting');
+}

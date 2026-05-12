@@ -13,7 +13,7 @@
   --color-promaroc-dark: #333333;
   --color-promaroc-light: #E6E6E6;
   --color-promaroc-white: #FFFFFF;
-  --color-promaroc-green: #0F3D37;
+  --color-promaroc-green: var(--promaroc-green);
   --color-promaroc-orange: #FFA725;
   /* ------------------------------- */
 
@@ -63,6 +63,8 @@
 }
 
 :root {
+  --promaroc-green: #0F3D37;
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -101,6 +103,8 @@
 }
 
 .dark {
+  --promaroc-green: #10917A; /* Brighter green optimized for readability on both dark backgrounds and white text */
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

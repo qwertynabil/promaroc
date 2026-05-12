@@ -24,8 +24,10 @@ export default async function HostBookingsPage() {
     p.bookings.map(b => ({ ...b, property: p }))
   );
 
-  const pendingBookings = allBookings.filter(b => b.status === "PENDING");
-  const confirmedBookings = allBookings.filter(b => b.status === "CONFIRMED");
+  const now = new Date();
+  // Ensure only future/current trips show up in the active queue
+  const pendingBookings = allBookings.filter(b => b.status === "PENDING" && b.checkOut > now);
+  const confirmedBookings = allBookings.filter(b => b.status === "CONFIRMED" && b.checkOut > now);
 
   const formatDate = (date: Date) => new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
 

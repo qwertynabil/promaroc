@@ -30,7 +30,8 @@ export default async function HostingDashboardPage() {
 
   properties.forEach((property) => {
     property.bookings.forEach((booking) => {
-      totalEarnings += booking.totalPrice;
+      // Host payout excludes the Promaroc service fee
+      totalEarnings += (booking.totalPrice - (booking.serviceFee || 0)); 
       // If the check-in date is in the future, count the guests
       if (booking.checkIn > now) {
         upcomingGuestsCount += booking.guestsCount;

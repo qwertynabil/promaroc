@@ -9,20 +9,26 @@ export default async function AdminDashboardPage() {
   if (session?.user?.role !== "ADMIN") redirect("/login");
 
   // Fetch all data for platform statistics
-  const usersCount = await prisma.user.count();
-  const properties = await prisma.property.findMany();
-  const bookings = await prisma.booking.findMany({
-    include: { property: true, guest: true },
-    orderBy: { createdAt: 'desc' }
-  });
+  const [
+    usersCount,
+    activeProperties,
+    pendingProperties,
+    revenueData,
+    bookingsCount,
+    recentBookings
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.property.count({ where: { status: "APPROVED" } }),
+    prisma.property.count({ where: { status: "PENDING" } }),
+    prisma.booking.aggregate({
+      _sum: { serviceFee: true },
+      where: { status: { in: ["CONFIRMED", "COMPLETED"] } }
+    }),
+    prisma.booking.count({ where: { status: { in: ["CONFIRMED", "COMPLETED"] } } }),
+    prisma.booking.findMany({ take: 5, include: { property: true, guest: true }, orderBy: { createdAt: 'desc' } })
+  ]);
 
-  // Calculate Platform Metrics
-  const activeProperties = properties.filter(p => p.status === "APPROVED").length;
-  const pendingProperties = properties.filter(p => p.status === "PENDING").length;
-  
-  // Platform Revenue is the sum of Promaroc's 10% Service Fee on CONFIRMED and COMPLETED bookings
-  const validBookings = bookings.filter(b => b.status === "CONFIRMED" || b.status === "COMPLETED");
-  const totalPlatformRevenue = validBookings.reduce((sum, booking) => sum + (booking.serviceFee || 0), 0);
+  const totalPlatformRevenue = revenueData._sum.serviceFee || 0;
 
   return (
     <div className="text-promaroc-black dark:text-promaroc-white animate-in fade-in duration-500 max-w-7xl mx-auto">
@@ -49,7 +55,7 @@ export default async function AdminDashboardPage() {
             <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl"><CalendarCheck className="w-5 h-5" /></div>
             <div className="text-black/50 dark:text-white/50 font-bold uppercase tracking-wider text-xs">Total Bookings</div>
           </div>
-          <div className="text-4xl font-bold font-sora">{validBookings.length}</div>
+          <div className="text-4xl font-bold font-sora">{bookingsCount}</div>
         </div>
 
         <div className="bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 p-6 rounded-3xl shadow-sm">
@@ -95,7 +101,7 @@ export default async function AdminDashboardPage() {
         <div className="bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-sora font-bold mb-6">Recent Transactions</h2>
           <div className="space-y-4">
-            {bookings.slice(0, 5).map(booking => (
+            {recentBookings.map(booking => (
               <div key={booking.id} className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
                 <div>
                   <div className="font-bold mb-1">{booking.property.title}</div>
@@ -109,7 +115,7 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
             ))}
-            {bookings.length === 0 && <p className="text-sm text-black/50 dark:text-white/50">No bookings yet.</p>}
+            {recentBookings.length === 0 && <p className="text-sm text-black/50 dark:text-white/50">No bookings yet.</p>}
           </div>
         </div>
 

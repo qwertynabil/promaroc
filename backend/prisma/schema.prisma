@@ -166,6 +166,9 @@ model Property {
   bookings            Booking[]
   portfolioProject    PortfolioProject? // Link back to the marketing Case Study
 
+  conversations      Conversation[]
+  savedBy SavedProperty[] @relation("PropertySavedBy")
+
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }
@@ -207,7 +210,60 @@ model Booking {
   updatedAt       DateTime @updatedAt
 }
 
+// ==========================================
+// 6. MESSAGING SYSTEM
+// ==========================================
 
+model Conversation {
+  id          String    @id @default(cuid())
+  
+  propertyId  String
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  guestId     String
+  guest       User      @relation("GuestConversations", fields: [guestId], references: [id], onDelete: Cascade)
+  
+  hostId      String
+  host        User      @relation("HostConversations", fields: [hostId], references: [id], onDelete: Cascade)
+  
+  messages    Message[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String       @db.Text
+  
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
+
+// ==========================================
+// 7. SAVED PROPERTIES (WISHLISTS)
+// ==========================================
+
+model SavedProperty {
+  id         String   @id @default(cuid())
+  
+  userId     String
+  user       User     @relation("UserSavedProperties", fields: [userId], references: [id], onDelete: Cascade)
+  
+  propertyId String
+  property   Property @relation("PropertySavedBy", fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now())
+
+  // A user can only save a specific property once
+  @@unique([userId, propertyId])
+}
 
 model User {
   id            String    @id @default(cuid())
@@ -225,7 +281,12 @@ model User {
   updatedAt     DateTime  @updatedAt
   properties      Property[] @relation("UserProperties") // Properties they own
   bookings        Booking[]  @relation("UserBookings")   // Trips they have booked
+  guestConversations Conversation[] @relation("GuestConversations")
+  hostConversations  Conversation[] @relation("HostConversations")
+  messagesSent       Message[]
+  savedProperties SavedProperty[] @relation("UserSavedProperties")
 }
+
 
 model Account {
   id                String  @id @default(cuid())

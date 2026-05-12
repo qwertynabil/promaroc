@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import Link from 'next/link';
 import { Bell, Building, FolderKanban, Inbox, LayoutDashboard, LogOut, Search, Settings, Users } from "lucide-react";
 import AdminNavigation from "./AdminNavigation";
+import ThemeToggle from "@/components/ThemeToggle";
+
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   // Double-security: Ensure only Admins can even load this layout
   const session = await auth();
@@ -32,6 +34,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <Bell className="w-5 h-5" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-promaroc-orange rounded-full border-2 border-white dark:border-[#0a0a0a]"></span>
           </button>
+          <ThemeToggle />
           <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-promaroc-green to-promaroc-orange p-[2px]">
             <div className="w-full h-full bg-white dark:bg-black rounded-full flex items-center justify-center overflow-hidden">
               {session.user.image ? (
@@ -47,17 +50,21 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       <div className="flex flex-1 overflow-hidden">
         <AdminNavigation bottomActions={
           <>
-          <Link href="/admin/settings" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-black/60 dark:text-white/60 hover:text-promaroc-black dark:hover:text-promaroc-white hover:bg-black/5 dark:hover:bg-white/5 transition-all mb-1">
-            <Settings className="w-4 h-4" />
-            Settings
+          <Link href="/admin/settings" className="flex items-center px-3 justify-start group-data-[collapsed=true]/sidebar:md:justify-center group-data-[collapsed=true]/sidebar:md:px-0 py-3 text-sm font-bold rounded-2xl text-black/60 dark:text-white/60 hover:text-promaroc-black dark:hover:text-promaroc-white hover:bg-black/5 dark:hover:bg-white/5 transition-all mb-1" title="Settings">
+            <Settings className="w-5 h-5 shrink-0 transition-colors" />
+            <span className="overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out max-w-[200px] opacity-100 ml-3 group-data-[collapsed=true]/sidebar:md:max-w-0 group-data-[collapsed=true]/sidebar:md:opacity-0 group-data-[collapsed=true]/sidebar:md:ml-0">
+              Settings
+            </span>
           </Link>
           <form action={async () => {
             "use server";
             await signOut({ redirectTo: "/login" });
           }}>
-            <button type="submit" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all">
-              <LogOut className="w-4 h-4" />
-              Sign Out
+            <button type="submit" className="w-full flex items-center px-3 justify-start group-data-[collapsed=true]/sidebar:md:justify-center group-data-[collapsed=true]/sidebar:md:px-0 py-3 text-sm font-bold rounded-2xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all" title="Sign Out">
+              <LogOut className="w-5 h-5 shrink-0 transition-colors" />
+              <span className="overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out max-w-[200px] opacity-100 ml-3 group-data-[collapsed=true]/sidebar:md:max-w-0 group-data-[collapsed=true]/sidebar:md:opacity-0 group-data-[collapsed=true]/sidebar:md:ml-0">
+                Sign Out
+              </span>
             </button>
           </form>
           </>

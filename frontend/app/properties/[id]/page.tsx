@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { auth } from "@/auth"; // <-- NEW: Import Auth
 import { 
   MapPin, BedDouble, Bath, Users, Maximize, CalendarDays, 
   CheckCircle2, Share, Heart, ChevronRight, PlayCircle 
@@ -8,8 +9,8 @@ import {
 import BookingWidget from "./BookingWidget";
 
 export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  // In Next.js 15, dynamic params is a Promise!
   const { id } = await params;
+  const session = await auth(); // <-- NEW: Get the logged-in user
 
   // Fetch property and the owner's details
   const property = await prisma.property.findUnique({
@@ -17,19 +18,31 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
     include: { owner: true }
   });
 
-  // If someone types a fake ID, send them to the 404 page
-  if (!property || !property.isBookable || property.status !== "APPROVED") {
+  if (!property) notFound();
+
+  // SECURITY: Who is allowed to see this page?
+  const isApproved = property.status === "APPROVED";
+  const isAdmin = session?.user?.role === "ADMIN";
+  const isOwner = session?.user?.id === property.ownerId;
+
+  // If it's not approved, AND you aren't the Admin, AND you aren't the Owner... kick them out!
+  if (!isApproved && !isAdmin && !isOwner) {
     notFound();
   }
 
   // Combine Hero Image and Gallery Images for the grid
   const allImages = [property.heroImage, ...(property.galleryImages || [])].filter(Boolean) as string[];
   const heroImg = allImages[0] || 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80';
-  const gridImages = allImages.slice(1, 5); // Take up to 4 images for the right grid
+  const gridImages = allImages.slice(1, 5);
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] dark:bg-promaroc-black transition-colors duration-300 pt-28 pb-32">
-      <div className="container mx-auto px-6 max-w-7xl">
+       {/* NOTE: If the property is NOT approved, show a warning banner at the top so the Admin/Host knows they are in "Preview Mode" */}
+       {!isApproved && (
+        <div className="bg-orange-500 text-white text-center py-2 text-sm font-bold w-full fixed top-0 z-[100]">
+          PREVIEW MODE: This property is currently {property.status} and hidden from the public.
+        </div>
+      )}      <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Breadcrumbs & Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -165,11 +178,13 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
           </div>
 
           {/* RIGHT COLUMN: Sticky Booking Widget (30%) */}
-          <div className="lg:col-span-1 relative">
-            {/* The widget sits here and uses sticky positioning in its own CSS! */}
-            <BookingWidget pricePerNight={property.pricePerNight} maxGuests={property.maxGuests} />
+            <div className="lg:col-span-1 relative">
+            <BookingWidget 
+              propertyId={property.id}  // <--- ADD THIS LINE!
+              pricePerNight={property.pricePerNight} 
+              maxGuests={property.maxGuests} 
+            />
           </div>
-
         </div>
       </div>
     </div>

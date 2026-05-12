@@ -83,7 +83,13 @@ export async function createProperty(formData: FormData) {
     galleryUrls.push(...uploadedUrls);
   }
 
-  // 5. Save to PostgreSQL
+// 5. Determine Status & Routing based on Role
+  const isAdmin = session.user.role === "ADMIN";
+  const finalStatus = isAdmin ? "APPROVED" : "PENDING";
+  const finalBadge = isAdmin ? true : false;
+  const redirectPath = isAdmin ? "/admin/properties" : "/dashboard/hosting";
+
+  // 6. Save to PostgreSQL
   try {
     await prisma.property.create({
       data: {
@@ -96,17 +102,15 @@ export async function createProperty(formData: FormData) {
         bathrooms,
         maxGuests,
         amenities,
-        // --- NEW FIELDS ---
         propertyType,
         sizeSqm,
         buildYear,
         videoUrl,
-        // ------------------
         heroImage: heroImageUrl,
         galleryImages: galleryUrls,
         ownerId: session.user.id,
-        status: "APPROVED",
-        isManagedByPromaroc: true 
+        status: finalStatus,              // PENDING for Hosts, APPROVED for Admins!
+        isManagedByPromaroc: finalBadge,  // No fake badges for Hosts!
       }
     });
   } catch (error) {
@@ -114,7 +118,33 @@ export async function createProperty(formData: FormData) {
     throw new Error("Failed to save property.");
   }
 
+  // 7. Clear caches and redirect to the correct dashboard
+  revalidatePath(redirectPath);
+  revalidatePath('/properties');
+  redirect(redirectPath);
+}
+
+// Add this to the very bottom of frontend/app/actions/propertyActions.ts
+
+export async function updatePropertyStatus(propertyId: string, newStatus: "APPROVED" | "REJECTED" | "PENDING") {
+  const session = await auth();
+  
+  // SECURITY: Only Admins can approve or reject properties
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized: Only Admins can update property status.");
+  }
+
+  try {
+    await prisma.property.update({
+      where: { id: propertyId },
+      data: { status: newStatus },
+    });
+  } catch (error) {
+    console.error("Failed to update property status:", error);
+    throw new Error("Failed to update property status.");
+  }
+
+  // Clear caches so the public Properties page and Admin dashboard instantly update
   revalidatePath('/admin/properties');
   revalidatePath('/properties');
-  redirect('/admin/properties');
 }

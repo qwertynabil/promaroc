@@ -1,11 +1,15 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: "/workspaces/promaroc/frontend",
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "*.github.dev",
+        "*.app.github.dev",
+      ],
+    },
   },
-  /* config options here */
 };
 
 export default nextConfig;

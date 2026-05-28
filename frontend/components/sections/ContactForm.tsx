@@ -13,14 +13,14 @@ export default function ContactForm() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
-        <Card className="p-8 border-slate-200 bg-white shadow-lg">
-          <h2 className="text-3xl font-bold mb-2 text-slate-900">Get Started Today</h2>
-          <p className="text-slate-600 mb-8">Schedule a demo or ask us any questions about our property management platform.</p>
+        <Card className="p-8 border-slate-200 dark:border-white/10 bg-white dark:bg-black/20 shadow-lg transition-colors duration-300">
+          <h2 className="text-3xl font-bold mb-2 text-slate-900 dark:text-white">Get Started Today</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8">Schedule a demo or ask us any questions about our property management platform.</p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
+                <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name *</label>
                 <Input
                   id="name"
                   name="name"
@@ -28,11 +28,11 @@ export default function ContactForm() {
                   onChange={handleChange}
                   placeholder="John Doe"
                   required
-                  className="border-slate-300 focus:border-blue-500"
+                  className="border-slate-300 dark:border-white/20 dark:bg-white/5 dark:text-white focus:border-blue-500"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">Email Address *</label>
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address *</label>
                 <Input
                   type="email"
                   id="email"
@@ -41,14 +41,14 @@ export default function ContactForm() {
                   onChange={handleChange}
                   placeholder="john@example.com"
                   required
-                  className="border-slate-300 focus:border-blue-500"
+                  className="border-slate-300 dark:border-white/20 dark:bg-white/5 dark:text-white focus:border-blue-500"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="company" className="block text-sm font-medium text-slate-700 mb-2">Company/Name *</label>
+                <label htmlFor="company" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Company/Name *</label>
                 <Input
                   id="company"
                   name="company"
@@ -56,24 +56,24 @@ export default function ContactForm() {
                   onChange={handleChange}
                   placeholder="Your Company Name"
                   required
-                  className="border-slate-300 focus:border-blue-500"
+                  className="border-slate-300 dark:border-white/20 dark:bg-white/5 dark:text-white focus:border-blue-500"
                 />
               </div>
               <div>
-                <label htmlFor="properties" className="block text-sm font-medium text-slate-700 mb-2">Number of Properties</label>
+                <label htmlFor="properties" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Number of Properties</label>
                 <Input
                   id="properties"
                   name="properties"
                   value={formData.properties}
                   onChange={handleChange}
                   placeholder="e.g., 5-10"
-                  className="border-slate-300 focus:border-blue-500"
+                  className="border-slate-300 dark:border-white/20 dark:bg-white/5 dark:text-white focus:border-blue-500"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">Message *</label>
+              <label htmlFor="message" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Message *</label>
               <Textarea
                 id="message"
                 name="message"
@@ -82,7 +82,7 @@ export default function ContactForm() {
                 placeholder="Tell us about your property management needs..."
                 required
                 rows={5}
-                className="border-slate-300 focus:border-blue-500 resize-none"
+                className="border-slate-300 dark:border-white/20 dark:bg-white/5 dark:text-white focus:border-blue-500 resize-none"
               />
             </div>
 
@@ -94,8 +94,8 @@ export default function ContactForm() {
           {message && (
             <div className={`mt-6 p-4 rounded-lg ${
               messageType === 'success'
-                ? 'bg-green-50 border border-green-200 text-green-800'
-                : 'bg-red-50 border border-red-200 text-red-800'
+                ? 'bg-green-50 border border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-200'
+                : 'bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-200'
             }`}>
               {message}
             </div>
@@ -104,39 +104,39 @@ export default function ContactForm() {
       </div>
 
       <div className="space-y-6">
-        <Card className="p-6 border-slate-200 bg-gradient-to-br from-blue-50 to-purple-50">
-          <h3 className="text-xl font-bold text-slate-900 mb-6">Contact Information</h3>
+        <Card className="p-6 border-slate-200 dark:border-white/10 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 transition-colors duration-300">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Contact Information</h3>
 
           <div className="space-y-6">
             <div className="flex gap-4">
               <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
-                <p className="font-semibold text-slate-900">Email</p>
-                <p className="text-slate-600">hello@promaroc.com</p>
+                <p className="font-semibold text-slate-900 dark:text-white">Email</p>
+                <p className="text-slate-600 dark:text-slate-400">hello@promaroc.com</p>
               </div>
             </div>
 
             <div className="flex gap-4">
               <Phone className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
-                <p className="font-semibold text-slate-900">Phone</p>
-                <p className="text-slate-600">1-800-PM-TODAY</p>
+                <p className="font-semibold text-slate-900 dark:text-white">Phone</p>
+                <p className="text-slate-600 dark:text-slate-400">1-800-PM-TODAY</p>
               </div>
             </div>
 
             <div className="flex gap-4">
               <MapPin className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
-                <p className="font-semibold text-slate-900">Office</p>
-                <p className="text-slate-600">San Francisco, CA</p>
+                <p className="font-semibold text-slate-900 dark:text-white">Office</p>
+                <p className="text-slate-600 dark:text-slate-400">San Francisco, CA</p>
               </div>
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 border-slate-200 bg-white">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Response Time</h3>
-          <p className="text-slate-600 text-sm">We typically respond to demo requests within 24 hours during business days.</p>
+        <Card className="p-6 border-slate-200 dark:border-white/10 bg-white dark:bg-black/20 transition-colors duration-300">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Response Time</h3>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">We typically respond to demo requests within 24 hours during business days.</p>
         </Card>
       </div>
     </div>

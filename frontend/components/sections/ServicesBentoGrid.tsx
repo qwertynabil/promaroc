@@ -62,8 +62,8 @@ export default function ServicesBentoGrid() {
   return (
     <section className="bg-promaroc-white dark:bg-promaroc-black py-32 relative overflow-hidden transition-colors duration-300">
       {/* Cinematic Ambient Glows */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-promaroc-green/5 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-promaroc-orange/5 dark:bg-promaroc-green/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-promaroc-green/10 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-promaroc-orange/10 dark:bg-promaroc-green/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-6xl">
         

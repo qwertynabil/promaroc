@@ -17,16 +17,16 @@ export default function TrustBar() {
   const duplicatedPlatforms = [...PLATFORMS, ...PLATFORMS];
 
   return (
-    <section className="bg-promaroc-black border-y border-promaroc-white/10 py-10 overflow-hidden relative">
+    <section className="bg-promaroc-black border-y border-white/10 py-10 overflow-hidden relative transition-colors duration-300">
       <div className="container mx-auto px-6 text-center mb-10">
-        <p className="text-promaroc-white/50 text-xs md:text-sm font-medium tracking-widest uppercase">
+        <p className="text-promaroc-white/50 text-xs md:text-sm font-medium tracking-widest uppercase transition-colors duration-300">
           Optimising presence across global platforms
         </p>
       </div>
         
       {/* Gradient Masks for smooth fading on edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-promaroc-black to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-promaroc-black to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-promaroc-black to-transparent z-10 pointer-events-none transition-colors duration-300" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-promaroc-black to-transparent z-10 pointer-events-none transition-colors duration-300" />
 
       <div className="w-full inline-flex flex-nowrap overflow-hidden">
         <motion.div

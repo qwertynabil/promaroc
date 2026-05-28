@@ -1,4 +1,6 @@
-import { Card } from '@/components/ui/card'
+'use client';
+
+import { motion } from 'framer-motion';
 import { Target, Users, Zap, CheckCircle } from 'lucide-react'
 
 export default function About() {
@@ -25,104 +27,206 @@ export default function About() {
     },
   ]
 
-  return (
-    <>
-      <main className="pt-32 min-h-screen">
-        <section className="py-20 bg-gradient-to-b from-blue-50 to-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">About Promaroc</h1>
-              <p className="text-2xl text-slate-600">Revolutionizing property management for the modern era</p>
-            </div>
-          </div>
-        </section>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 },
+    },
+  };
 
-        <section className="py-20 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <h2 className="text-4xl font-bold text-slate-900">Our Story</h2>
-                <p className="text-lg text-slate-600 leading-relaxed">
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.6 } 
+    },
+  };
+
+  return (
+    <main className="min-h-screen bg-promaroc-white dark:bg-promaroc-black transition-colors duration-300">
+      
+      {/* HERO SECTION */}
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-promaroc-green/10 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="container mx-auto px-6 max-w-5xl text-center relative z-10">
+          <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+            <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-sora font-bold text-promaroc-black dark:text-promaroc-white tracking-tight mb-6">
+              Redefining <br className="hidden md:block" />
+              <span className="text-promaroc-green">Property Management.</span>
+            </motion.h1>
+            <motion.p variants={itemVariants} className="text-xl md:text-2xl text-black/60 dark:text-white/60 font-inter max-w-3xl mx-auto leading-relaxed">
+              We are a collective of hospitality experts, data scientists, and operational leaders driven by one goal: maximizing your asset's true potential.
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* OUR STORY SECTION */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }} 
+              whileInView={{ opacity: 1, x: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ duration: 0.8 }} 
+              className="space-y-8"
+            >
+              <h2 className="text-4xl md:text-5xl font-sora font-bold text-promaroc-black dark:text-promaroc-white">Our Story</h2>
+              <div className="space-y-6 text-lg text-black/70 dark:text-white/70 font-inter leading-relaxed">
+                <p>
                   Promaroc was founded by a team of experienced property managers who recognized a critical gap in the market. Traditional property management was fragmented, inefficient, and frustrating. We set out to build a platform that would change everything.
                 </p>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <p>
                   Today, we serve thousands of property managers worldwide, helping them manage millions of square feet of commercial and residential properties. Our platform has processed billions of dollars in transactions and continues to grow exponentially.
                 </p>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <p>
                   We believe the future of property management is intelligent, automated, and accessible to everyone—from solo operators to large enterprises.
                 </p>
               </div>
-              <div className="relative">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl h-96 flex items-center justify-center">
-                  <div className="text-center text-white space-y-4">
-                    <p className="text-5xl font-bold">10K+</p>
-                    <p className="text-xl">Property Managers Trust Us</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }} 
+              whileInView={{ opacity: 1, x: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ duration: 0.8 }} 
+              className="relative"
+            >
+              <div className="aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl relative">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2000&auto=format&fit=crop')` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-promaroc-black/80 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-10">
+                  <div className="text-promaroc-white space-y-2">
+                    <p className="text-5xl font-sora font-bold text-promaroc-green">10K+</p>
+                    <p className="text-xl font-medium">Properties Optimized</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="py-20 bg-slate-50">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-bold text-center text-slate-900 mb-16">Our Values</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {values.map((value, index) => {
-                const Icon = value.icon
-                return (
-                  <Card key={index} className="p-8 border-slate-200 bg-white hover:shadow-lg transition-shadow">
-                    <Icon className="w-12 h-12 text-blue-600 mb-4" />
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{value.title}</h3>
-                    <p className="text-slate-600 leading-relaxed">{value.description}</p>
-                  </Card>
-                )
-              })}
-            </div>
+      {/* VALUES SECTION */}
+      <section className="py-32 bg-promaroc-black relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-promaroc-green/20 via-transparent to-transparent pointer-events-none" />
+        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+          <div className="text-center mb-20">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }} 
+              className="text-4xl md:text-5xl font-sora font-bold text-promaroc-white mb-6"
+            >
+              Our Core Values
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ delay: 0.1 }} 
+              className="text-xl text-promaroc-light/70 max-w-2xl mx-auto font-inter"
+            >
+              The principles that guide our decisions, shape our culture, and drive our commitment to excellence.
+            </motion.p>
           </div>
-        </section>
-
-        <section className="py-20 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="text-center">
-                <p className="text-4xl font-bold text-blue-600 mb-2">10K+</p>
-                <p className="text-slate-600">Active Users</p>
-              </div>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-purple-600 mb-2">50K+</p>
-                <p className="text-slate-600">Properties Managed</p>
-              </div>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-green-600 mb-2">$2B+</p>
-                <p className="text-slate-600">Assets Under Management</p>
-              </div>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-orange-600 mb-2">6+</p>
-                <p className="text-slate-600">Years in Business</p>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="group p-10 bg-white/5 rounded-3xl border border-white/10 hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                >
+                  <div className="w-14 h-14 bg-promaroc-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Icon className="w-7 h-7 text-promaroc-green" />
+                  </div>
+                  <h3 className="text-2xl font-sora font-bold text-white mb-4">{value.title}</h3>
+                  <p className="text-white/60 font-inter leading-relaxed">{value.description}</p>
+                </motion.div>
+              );
+            })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="py-20 bg-slate-50">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-4xl font-bold text-slate-900 mb-6">Our Team</h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-12">
-              We're a diverse team of property management experts, software engineers, and designers united by a mission to transform the industry. Every member is passionate about solving real problems for property managers.
+      {/* STATS BAR */}
+      <section className="py-20 bg-promaroc-green">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/20">
+            {[
+              { label: 'Active Users', value: '10K+' },
+              { label: 'Properties Managed', value: '50K+' },
+              { label: 'Assets Under Mgmt', value: '$2B+' },
+              { label: 'Years in Business', value: '6+' }
+            ].map((stat, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="text-center px-4"
+              >
+                <div className="text-4xl md:text-5xl font-sora font-bold text-promaroc-white mb-2">{stat.value}</div>
+                <div className="text-xs md:text-sm text-promaroc-white/80 font-medium uppercase tracking-wider">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TEAM SECTION */}
+      <section className="py-32 bg-promaroc-white dark:bg-promaroc-black transition-colors duration-300">
+        <div className="container mx-auto px-6 max-w-6xl text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            className="mb-20"
+          >
+            <h2 className="text-4xl md:text-5xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6">Meet the Experts</h2>
+            <p className="text-xl text-black/60 dark:text-white/60 max-w-3xl mx-auto font-inter">
+              A diverse team of property management veterans, software engineers, and hospitality experts united by a mission to transform the industry.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <Card key={i} className="p-8 border-slate-200 bg-white hover:shadow-lg transition-shadow">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full mx-auto mb-4"></div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">Team Member</h3>
-                  <p className="text-slate-600">Expert in property management and innovation</p>
-                </Card>
-              ))}
-            </div>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {[
+              { name: 'Youssef B.', title: 'CEO & Founder', img: '1560250097-0b93528c311a' },
+              { name: 'Amina M.', title: 'Head of Operations', img: '1573496359142-b8d87734a5a2' },
+              { name: 'Omar K.', title: 'Lead Strategist', img: '1580489944761-15a19d654956' },
+            ].map((member, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                className="group relative"
+              >
+                <div className="aspect-[3/4] rounded-3xl overflow-hidden bg-black/5 dark:bg-white/5 mb-6 relative">
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                    style={{ backgroundImage: `url('https://images.unsplash.com/photo-${member.img}?q=80&w=800&auto=format&fit=crop')` }}
+                  />
+                </div>
+                <h3 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-1">{member.name}</h3>
+                <p className="text-promaroc-green font-medium">{member.title}</p>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+
+    </main>
   )
-}
+} 

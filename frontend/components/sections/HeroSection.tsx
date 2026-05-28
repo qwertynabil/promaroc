@@ -35,7 +35,7 @@ export default function HeroSection() {
         className="absolute inset-0 bg-cover bg-center z-0"
         style={{ backgroundImage: `url('https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?q=80&w=1524&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=2000&auto=format&fit=crop')` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-promaroc-black via-promaroc-black/70 to-transparent z-0" />
+      <div className="absolute inset-0 bg-gradient-to-t from-promaroc-black via-promaroc-black/80 to-promaroc-green/20 z-0" />
 
       <div className="container relative z-10 mx-auto px-6 max-w-5xl text-center flex flex-col items-center justify-center">
         

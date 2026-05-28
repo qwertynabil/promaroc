@@ -7,7 +7,7 @@ import { BRAND } from '@/lib/constants';
 
 export default function HomeContactCTA() {
   return (
-    <section className="bg-promaroc-white py-32 relative overflow-hidden">
+    <section className="bg-promaroc-white dark:bg-promaroc-black py-32 relative overflow-hidden transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-5xl">
         
         {/* The CTA Box */}
@@ -16,7 +16,7 @@ export default function HomeContactCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
-          className="bg-promaroc-black rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden shadow-2xl"
+          className="bg-gradient-to-br from-promaroc-green to-promaroc-black dark:bg-gradient-to-br dark:from-white/10 dark:to-white/5 dark:border dark:border-white/10 rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden shadow-2xl transition-colors duration-300"
         >
           {/* Subtle Background Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-promaroc-green/20 rounded-full blur-[100px] pointer-events-none" />
@@ -35,7 +35,7 @@ export default function HomeContactCTA() {
               {/* Primary Contact Button */}
               <Link 
                 href="/contact"
-                className="group flex items-center justify-center gap-2 bg-promaroc-green text-promaroc-white px-8 py-4 rounded-full font-semibold text-base hover:bg-promaroc-white hover:text-promaroc-black transition-all duration-300 w-full sm:w-auto shadow-[0_0_30px_rgba(15,61,55,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                className="group flex items-center justify-center gap-2 bg-promaroc-white text-promaroc-black px-8 py-4 rounded-full font-semibold text-base hover:bg-promaroc-orange hover:text-promaroc-white transition-all duration-300 w-full sm:w-auto shadow-[0_0_30px_rgba(255,255,255,0.2)]"
               >
                 Start Optimization
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

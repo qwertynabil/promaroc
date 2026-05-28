@@ -28,7 +28,7 @@ const PROJECTS = [
 
 export default function FeaturedProjects() {
   return (
-    <section className="bg-promaroc-black py-32 relative overflow-hidden">
+    <section className="bg-gradient-to-b from-promaroc-green/5 to-promaroc-white dark:from-promaroc-black dark:to-promaroc-black py-32 relative overflow-hidden transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Section Header */}
@@ -38,7 +38,7 @@ export default function FeaturedProjects() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-sora font-bold text-promaroc-white mb-6"
+              className="text-4xl md:text-5xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6 transition-colors duration-300"
             >
               Proven Results.<br/>
               <span className="text-promaroc-green">Premium Properties.</span>
@@ -48,7 +48,7 @@ export default function FeaturedProjects() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-lg text-promaroc-light/70 font-inter"
+              className="text-lg text-promaroc-dark/70 dark:text-promaroc-light/70 font-inter transition-colors duration-300"
             >
               Explore our portfolio of optimized assets and see how we turn beautiful spaces into high-yielding investments.
             </motion.p>
@@ -61,7 +61,7 @@ export default function FeaturedProjects() {
           >
             <Link 
               href="/projects"
-              className="inline-flex items-center gap-2 text-promaroc-white hover:text-promaroc-green font-medium transition-colors"
+              className="inline-flex items-center gap-2 text-promaroc-black dark:text-promaroc-white hover:text-promaroc-green dark:hover:text-promaroc-green font-medium transition-colors duration-300"
             >
               View all case studies
               <ArrowRight className="w-5 h-5" />

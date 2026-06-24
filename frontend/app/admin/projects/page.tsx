@@ -43,7 +43,7 @@ export default async function AdminProjectsPage() {
             </Link>
           </div>
         ) : (
-          projects.map((project) => (
+          projects.map((project: any) => (
             <div key={project.id} className="group bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col relative overflow-hidden">
               
               {/* Decorative Gradient Blob on Hover */}

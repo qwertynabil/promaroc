@@ -101,7 +101,7 @@ export default async function AdminDashboardPage() {
         <div className="bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-sora font-bold mb-6">Recent Transactions</h2>
           <div className="space-y-4">
-            {recentBookings.map(booking => (
+            {recentBookings.map((booking: any) => (
               <div key={booking.id} className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
                 <div>
                   <div className="font-bold mb-1">{booking.property.title}</div>

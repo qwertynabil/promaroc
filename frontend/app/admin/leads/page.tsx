@@ -46,7 +46,7 @@ export default async function AdminLeadsPage() {
                   </td>
                 </tr>
               ) : (
-                leads.map((lead) => (
+                leads.map((lead: any) => (
                   <tr key={lead.id} className="hover:bg-black/[0.02] dark:hover:bg-white/5 transition-colors group">
                     <td className="px-6 py-5 text-black/60 dark:text-white/60">
                       {lead.createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}

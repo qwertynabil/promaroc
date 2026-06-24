@@ -63,7 +63,7 @@ export async function createProject(formData: FormData) {
   const galleryUrls: string[] = [];
 
   // Filter out any empty file inputs
-  const validGalleryFiles = galleryFiles.filter(file => file.size > 0);
+  const validGalleryFiles = galleryFiles.filter((file: any) => file.size > 0);
 
   if (validGalleryFiles.length > 0) {
     // Upload all images to Cloudflare R2 at the exact same time

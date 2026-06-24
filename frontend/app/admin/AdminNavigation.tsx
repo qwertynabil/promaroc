@@ -50,7 +50,7 @@ export default function AdminNavigation({ bottomActions }: { bottomActions: Reac
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <nav className="flex-1 px-4 pt-6 space-y-1.5 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
-          {links.map((link) => {
+          {links.map((link: any) => {
             const isActive = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href + '/'));
             const Icon = link.icon;
             return (

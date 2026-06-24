@@ -128,13 +128,13 @@ export default function DashboardNavigation({ role }: { role: string }) {
           </div>
 
           {/* Render Primary Role-Based Links */}
-          {primaryLinks.map((link) => (
+          {primaryLinks.map((link: any) => (
             <NavLink key={link.href} link={link} />
           ))}
 
           <div className="pt-2 mt-2 border-t border-black/5 dark:border-white/10">
             {/* Render Universal Links */}
-            {UNIVERSAL_LINKS.map((link) => (
+            {UNIVERSAL_LINKS.map((link: any) => (
               <NavLink key={link.href} link={link} />
             ))}
           </div>

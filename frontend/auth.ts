@@ -49,7 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // 2 & 3. Hash Password, Delete Token, & Create User in a Transaction
           if (!user) {
             const hashedPassword = await bcrypt.hash(password, 10);
-            user = await prisma.$transaction(async (tx) => {
+            user = await prisma.$transaction(async (tx: any) => {
               await tx.verificationToken.delete({
                 where: { identifier_token: { identifier: email, token: code } },
               });
@@ -102,7 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user && token) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = token.role as any;
       }
       return session;
     },

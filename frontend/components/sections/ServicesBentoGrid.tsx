@@ -50,7 +50,7 @@ export default function ServicesBentoGrid() {
     },
   };
 
-  const cardVariants = {
+  const cardVariants: any = {
     hidden: { opacity: 0, y: 30 },
     visible: { 
       opacity: 1, 
@@ -97,7 +97,7 @@ export default function ServicesBentoGrid() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          {SERVICES.map((service) => (
+          {SERVICES.map((service: any) => (
             <motion.div 
               key={service.id}
               variants={cardVariants}
@@ -117,7 +117,7 @@ export default function ServicesBentoGrid() {
                 </p>
 
                 <ul className="space-y-4 mb-10">
-                  {service.features.map((feature, i) => (
+                  {service.features.map((feature: any, i: any) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-promaroc-black dark:text-promaroc-white font-medium group/item">
                     <CheckCircle2 className="w-5 h-5 text-promaroc-green dark:text-white group-hover/item:scale-110 transition-transform" />
                       {feature}

@@ -143,7 +143,7 @@ export default function About() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map((i: any) => (
               <Card
                 key={i}
                 className="p-8 border-slate-200 bg-white hover:shadow-lg transition-shadow"

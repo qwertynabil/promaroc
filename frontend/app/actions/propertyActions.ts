@@ -48,7 +48,7 @@ export async function createProperty(formData: FormData) {
   if (pricePerNight <= 0) throw new Error("Price per night must be greater than 0.");
 
   const amenitiesString = formData.get('amenities') as string;
-  const amenities = amenitiesString.split(',').map(item => item.trim()).filter(Boolean);
+  const amenities = amenitiesString.split(',').map((item: any) => item.trim()).filter(Boolean);
 
   // 3. Handle Hero Image
   const heroFile = formData.get('heroImage') as File;
@@ -69,7 +69,7 @@ export async function createProperty(formData: FormData) {
   // 4. Handle Gallery Images
   const galleryFiles = formData.getAll('gallery') as File[];
   const galleryUrls: string[] = [];
-  const validGalleryFiles = galleryFiles.filter(file => file.size > 0);
+  const validGalleryFiles = galleryFiles.filter((file: any) => file.size > 0);
 
   if (validGalleryFiles.length > 0) {
     const uploadPromises = validGalleryFiles.map(async (file) => {

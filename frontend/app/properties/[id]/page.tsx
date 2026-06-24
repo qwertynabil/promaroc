@@ -173,7 +173,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
               <div>
                 <h2 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6">Features & Amenities</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
-                  {property.amenities.map((amenity, index) => (
+                  {property.amenities.map((amenity: any, index: any) => (
                     <div key={index} className="flex items-center gap-3 text-black/80 dark:text-white/80 font-medium">
                       <CheckCircle2 className="w-5 h-5 text-promaroc-green" />
                       {amenity}

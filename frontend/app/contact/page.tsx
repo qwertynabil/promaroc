@@ -171,7 +171,7 @@ export default function ContactPage() {
                   <motion.div key="step1" variants={formVariants} initial="hidden" animate="visible" exit="exit">
                 <h2 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6">What type of property do you own?</h2>
                     <div className="grid grid-cols-1 gap-4">
-                      {PROPERTY_TYPES.map(type => (
+                      {PROPERTY_TYPES.map((type: any) => (
                         <button
                           key={type.id}
                           onClick={() => { updateFormData('propertyType', type.label); nextStep(); }}
@@ -196,7 +196,7 @@ export default function ContactPage() {
                   <motion.div key="step2" variants={formVariants} initial="hidden" animate="visible" exit="exit">
                 <h2 className="text-2xl font-sora font-bold text-promaroc-black dark:text-promaroc-white mb-6">What do you need help with?</h2>
                     <div className="grid grid-cols-1 gap-4">
-                      {SERVICES_NEEDED.map(service => (
+                      {SERVICES_NEEDED.map((service: any) => (
                         <button
                           key={service.id}
                           onClick={() => { updateFormData('serviceNeeded', service.label); nextStep(); }}

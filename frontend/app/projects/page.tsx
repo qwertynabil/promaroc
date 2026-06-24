@@ -1,4 +1,6 @@
 // Notice there is NO 'use client' here! This runs entirely on the server.
+export const dynamic = 'force-dynamic';
+
 import ProjectsClient from './ProjectsClient';
 
 export default async function ProjectsPage() {

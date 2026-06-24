@@ -62,7 +62,7 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
     : FALLBACK_PROJECTS;
 
   // Filter projects based on the selected tab
-  const filteredProjects = projectsToDisplay.filter(project => 
+  const filteredProjects = projectsToDisplay.filter((project: any) => 
     activeCategory === 'All' ? true : project.category === activeCategory
   );
 
@@ -93,7 +93,7 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
           transition={{ duration: 0.6, delay: 0.2 }}
           className="flex flex-wrap items-center gap-3 mb-12"
         >
-          {CATEGORIES.map((category) => (
+          {CATEGORIES.map((category: any) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
@@ -111,7 +111,7 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
         {/* Projects Grid */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project: any) => (
               <motion.div
                 key={project.id}
                 layout

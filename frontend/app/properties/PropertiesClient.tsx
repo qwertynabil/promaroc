@@ -26,7 +26,7 @@ export default function PropertiesClient({ initialProperties }: { initialPropert
   const categories = ['ALL', 'RIAD', 'VILLA', 'APARTMENT'];
 
   // Filter the properties based on the selected tab
-  const filteredProperties = initialProperties.filter((property) => {
+  const filteredProperties = initialProperties.filter((property: any) => {
     if (activeFilter === 'ALL') return true;
     return property.propertyType === activeFilter;
   });
@@ -35,7 +35,7 @@ export default function PropertiesClient({ initialProperties }: { initialPropert
     <div>
       {/* 1. Filter Tabs */}
       <div className="flex flex-wrap gap-2 md:gap-4 mb-12">
-        {categories.map((category) => (
+        {categories.map((category: any) => (
           <button
             key={category}
             onClick={() => setActiveFilter(category)}
@@ -61,7 +61,7 @@ export default function PropertiesClient({ initialProperties }: { initialPropert
               No properties found in this category yet.
             </motion.div>
           ) : (
-            filteredProperties.map((property) => (
+            filteredProperties.map((property: any) => (
               <motion.div
                 layout
                 initial={{ opacity: 0, scale: 0.95 }}

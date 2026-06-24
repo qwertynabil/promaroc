@@ -24,8 +24,8 @@ export default async function GuestTripsPage() {
 
   // 2. Separate into Upcoming and Past trips
   const now = new Date();
-  const upcomingTrips = allBookings.filter(b => b.checkOut > now);
-  const pastTrips = allBookings.filter(b => b.checkOut <= now);
+  const upcomingTrips = allBookings.filter((b: any) => b.checkOut > now);
+  const pastTrips = allBookings.filter((b: any) => b.checkOut <= now);
 
   // Helper to format dates beautifully (e.g., "Oct 12, 2026")
   const formatDate = (date: Date) => {
@@ -63,7 +63,7 @@ export default async function GuestTripsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16">
-          {upcomingTrips.map((booking) => (
+          {upcomingTrips.map((booking: any) => (
             <div key={booking.id} className="bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row group">
               
               {/* Property Image */}
@@ -119,7 +119,7 @@ export default async function GuestTripsPage() {
         <>
           <h2 className="text-2xl font-sora font-bold mb-6">Where you've been</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pastTrips.map((booking) => (
+            {pastTrips.map((booking: any) => (
               <div key={booking.id} className="bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 p-5 rounded-3xl flex items-center gap-4 opacity-70 hover:opacity-100 transition-opacity">
                 <div className="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-2xl overflow-hidden shrink-0">
                   {booking.property.heroImage && (

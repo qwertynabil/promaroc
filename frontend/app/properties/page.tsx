@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import PropertiesClient from "./PropertiesClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Luxury Stays | Promaroc",
   description: "Discover our exclusive collection of luxury Riads, Villas, and Apartments.",

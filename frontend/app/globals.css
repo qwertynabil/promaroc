@@ -6,8 +6,8 @@
 
 @theme inline {
   /* --- PROMAROC BRAND IDENTITY --- */
-  --font-sora: var(--font-sora), sans-serif;
-  --font-inter: var(--font-inter), sans-serif;
+  --font-sora: "Sora", "Segoe UI", Arial, sans-serif;
+  --font-inter: "Inter", "Segoe UI", Arial, sans-serif;
 
   --color-promaroc-black: #000000;
   --color-promaroc-dark: #333333;
@@ -22,7 +22,7 @@
   
   /* We map the default sans font to Inter so shadcn/ui uses it automatically */
   --font-sans: var(--font-inter); 
-  --font-mono: var(--font-geist-mono);
+  --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

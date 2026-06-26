@@ -1,15 +1,8 @@
 import express, { type Request, type Response } from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { prisma } from './lib/prisma.js';
 
-const app = express();
-
-// Initialize Prisma 7 to talk to PostgreSQL using the Driver Adapter
-const pool = new Pool({ connectionString: process.env.DATABASE_URL as string });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter }); 
+const app = express(); 
 
 const PORT = process.env.PORT || 5000;
 // Middleware
